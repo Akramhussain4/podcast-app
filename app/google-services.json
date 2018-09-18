@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "419405426689",
+    "firebase_url": "https://podplay-cc428.firebaseio.com",
+    "project_id": "podplay-cc428",
+    "storage_bucket": "podplay-cc428.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:419405426689:android:c49a940f605be554",
+        "android_client_info": {
+          "package_name": "com.hussain.podcastapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "419405426689-bbgp82ckeif0g6be4nbotocc5gg5k6eu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzCnGts6dq3A6-4ZkUejW7bG7kMp9QKbI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

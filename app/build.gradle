@@ -26,9 +26,13 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.ramotion.navigationtoolbar:navigation-toolbar:0.1.0'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.github.devlight.navigationtabstrip:navigationtabstrip:1.0.4'
     implementation 'com.squareup.retrofit2:converter-simplexml:2.3.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+apply plugin: 'com.google.gms.google-services'

@@ -8,7 +8,7 @@ public class Entry {
 
     @SerializedName("id")
     private FeedID feedId;
-    @SerializedName("EntryTitle")
+    @SerializedName("title")
     private Title EntryTitle;
     @SerializedName("im:image")
     private List<Image> image;

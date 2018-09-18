@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">PodcastApp</string>
+    <array name="titles">
+        <item>TECH</item>
+        <item>Science</item>
+        <item>Health</item>
+        <item>Comedy</item>
+    </array>
 </resources>
