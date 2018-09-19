@@ -1,8 +1,9 @@
 package com.hussain.podcastapp.utils;
 
-public class AppConstants {
+public final class AppConstants {
 
     public static final String BASE_URL = "https://itunes.apple.com";
+
     public static final String ARTS_GENRE = "1301";
     public static final String COMEDY_GENRE = "1303";
     public static final String EDUCATION_GENRE = "1304";
@@ -13,4 +14,10 @@ public class AppConstants {
     public static final String BUSINESS_GENRE = "1321";
     public static final String GAMES_GENRE = "1323";
     public static final String SOCIETY_GENRE = "1324";
+
+    public static final String CATEGORY_KEY = "Category";
+    public static final String ENTRY_KEY = "EntryDataKey";
+    public static final String RESULTS_KEY = "ResultsDataKey";
+    public static final String FEED_URL_KEY = "FeedUrlKey";
+    public static final String ARTWORK_URL = "ArtworkUrl";
 }

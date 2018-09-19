@@ -7,50 +7,42 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/vp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="?actionBarSize" />
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary">
 
-        <FrameLayout
+        <View
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="@color/colorPrimary">
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="18dp"
+            android:background="@color/colorPrimaryDark" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="18dp"
-                android:background="@color/colorPrimaryDark"/>
+        <com.gigamole.navigationtabstrip.NavigationTabStrip
+            android:id="@+id/nts"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginStart="30dp"
+            android:elevation="6dp"
+            app:nts_active_color="#fff"
+            app:nts_color="@color/colorAccent"
+            app:nts_corners_radius="3.5dp"
+            app:nts_factor="0.8"
+            app:nts_gravity="bottom"
+            app:nts_inactive_color="#81ffffff"
+            app:nts_size="14dp"
+            app:nts_titles="@array/titles"
+            app:nts_type="point"
+            app:nts_typeface="fonts/moon.otf"
+            app:nts_weight="9dp" />
 
-            <com.gigamole.navigationtabstrip.NavigationTabStrip
-                android:id="@+id/nts"
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:layout_gravity="center"
-                android:layout_marginEnd="30dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginStart="30dp"
-                android:elevation="6dp"
-                app:nts_active_color="#fff"
-                app:nts_color="@color/colorAccent"
-                app:nts_corners_radius="3.5dp"
-                app:nts_factor="0.8"
-                app:nts_gravity="bottom"
-                app:nts_inactive_color="#81ffffff"
-                app:nts_size="14dp"
-                app:nts_titles="@array/titles"
-                app:nts_type="point"
-                app:nts_typeface="fonts/moon.otf"
-                app:nts_weight="7dp"/>
-
-        </FrameLayout>
-
-
-    </LinearLayout>
-
+    </FrameLayout>
 </FrameLayout>

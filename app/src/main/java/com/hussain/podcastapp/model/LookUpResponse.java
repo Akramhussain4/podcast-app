@@ -1,5 +1,8 @@
 package com.hussain.podcastapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -8,8 +11,7 @@ public class LookUpResponse {
 
     @SerializedName("results")
     private List<Results> results;
-    @SerializedName("artworkUrl600")
-    private String artWork;
+
 
     public List<Results> getResults() {
         return results;
@@ -19,17 +21,28 @@ public class LookUpResponse {
         this.results = results;
     }
 
-    public String getArtWork() {
-        return artWork;
-    }
+    public class Results implements Parcelable {
 
-    public void setArtWork(String artWork) {
-        this.artWork = artWork;
-    }
+        @SuppressWarnings("unused")
+        public final Parcelable.Creator<Results> CREATOR = new Parcelable.Creator<Results>() {
+            @Override
+            public Results createFromParcel(Parcel in) {
+                return new Results(in);
+            }
 
-    public class Results{
-
+            @Override
+            public Results[] newArray(int size) {
+                return new Results[size];
+            }
+        };
         private String feedUrl;
+        @SerializedName("artworkUrl600")
+        private String artWork;
+
+        protected Results(Parcel in) {
+            feedUrl = in.readString();
+            artWork = in.readString();
+        }
 
         public String getFeedUrl() {
             return feedUrl;
@@ -37,6 +50,25 @@ public class LookUpResponse {
 
         public void setFeedUrl(String feedUrl) {
             this.feedUrl = feedUrl;
+        }
+
+        public String getArtWork() {
+            return artWork;
+        }
+
+        public void setArtWork(String artWork) {
+            this.artWork = artWork;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(feedUrl);
+            dest.writeString(artWork);
         }
     }
 }

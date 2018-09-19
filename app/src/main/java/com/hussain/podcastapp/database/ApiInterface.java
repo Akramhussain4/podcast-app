@@ -11,10 +11,10 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    @GET("/us/rss/toppodcasts/limit=50/explicit=true/json")
+    @GET("/us/rss/toppodcasts/limit=200/explicit=true/json")
     Call<ApiResponse> getTopPodcasts();
 
-    @GET("us/rss/toppodcasts/genre={id}/json")
+    @GET("us/rss/toppodcasts/limit=200/genre={id}/json")
     Call<ApiResponse> getPodcastsByGengre(@Path("id") String genreID);
 
     @GET("/lookup")

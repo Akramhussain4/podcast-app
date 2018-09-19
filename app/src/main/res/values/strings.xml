@@ -6,4 +6,9 @@
         <item>Health</item>
         <item>Comedy</item>
     </array>
+    <string name="bottom_sheet_option_camera">Use Camera</string>
+    <string name="bottom_sheet_option_gallery">Upload from Gallery</string>
+    <string name="bottom_sheet_option_heading">Add Photo</string>
+    <string name="bottom_sheet_option_remove_photo">Remove Photo</string>
+    <string name="podcast_thumbnail">podcast thumbnail</string>
 </resources>
