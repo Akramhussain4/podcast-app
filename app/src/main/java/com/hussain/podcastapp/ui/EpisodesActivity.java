@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hussain.podcastapp.R;
+import com.hussain.podcastapp.adapter.EpisodeAdapter;
 import com.hussain.podcastapp.database.ApiInterface;
 import com.hussain.podcastapp.model.Channel;
 import com.hussain.podcastapp.model.Item;
@@ -31,7 +34,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-public class EpisodesActivity extends AppCompatActivity {
+public class EpisodesActivity extends AppCompatActivity implements EpisodeAdapter.EpisodeClickListener {
 
     private static final String TAG = EpisodesActivity.class.getName();
     @BindView(R.id.tvTitle)
@@ -40,6 +43,11 @@ public class EpisodesActivity extends AppCompatActivity {
     TextView mDescription;
     @BindView(R.id.ivArtwork)
     ImageView mArtwork;
+    @BindView(R.id.tvEpisodes)
+    TextView mTvEpispodes;
+    @BindView(R.id.rvEpisodes)
+    RecyclerView rvEpisodes;
+
     private String mArtworkUrl;
     private List<Item> mItems;
     private Channel mChannel;
@@ -58,14 +66,19 @@ public class EpisodesActivity extends AppCompatActivity {
     }
 
     private void setUI() {
-        if(mChannel!=null) {
+        if (mChannel != null && mItems != null) {
+            String episodesText = mItems.size() + getResources().getString(R.string.episodes_text);
             mTitle.setText(mChannel.getTitle());
             mDescription.setText(Html.fromHtml(mChannel.getDescription()));
+            mTvEpispodes.setText(episodesText);
             GlideApp.with(this)
                     .load(mArtworkUrl)
                     .placeholder(R.drawable.ic_launcher_foreground)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mArtwork);
+            EpisodeAdapter adapter = new EpisodeAdapter(mItems,this);
+            rvEpisodes.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            rvEpisodes.setAdapter(adapter);
         }
     }
 
@@ -91,9 +104,8 @@ public class EpisodesActivity extends AppCompatActivity {
                     mChannel = data.getChannel();
                     mItems = mChannel.getItems();
                     setUI();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),"SERVER DOWN FOR THIS PODCAST!",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "SERVER DOWN FOR THIS PODCAST!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -104,5 +116,9 @@ public class EpisodesActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onEpisodeClick(Item item, int position) {
+
+    }
 }
 
