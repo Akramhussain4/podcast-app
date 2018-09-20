@@ -1,28 +1,26 @@
 package com.hussain.podcastapp.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.PodcastPagerAdapter;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @BindView(R.id.vp)
     ViewPager mViewPager;
     @BindView(R.id.nts)
     NavigationTabStrip mNavStrip;
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        onCreate(savedInstanceState, R.layout.activity_main);
         setUI();
     }
 

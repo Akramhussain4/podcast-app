@@ -1,7 +1,10 @@
 package com.hussain.podcastapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hussain.podcastapp.IBaseView;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.PodcastAdapter;
+import com.hussain.podcastapp.customview.CustomBottomSheet;
 import com.hussain.podcastapp.database.ApiInterface;
 import com.hussain.podcastapp.model.ApiResponse;
 import com.hussain.podcastapp.model.Entry;
@@ -23,22 +28,30 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PodcastListFragment extends Fragment implements PodcastAdapter.PodcastClickListener {
+public class PodcastListFragment extends Fragment implements PodcastAdapter.PodcastClickListener, IBaseView {
 
     private static final String TAG = PodcastListFragment.class.getName();
+
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.swiperefresh)
     SwipeRefreshLayout mSwipeRefresh;
+
     private List<Entry> mEntryData;
     private PodcastListFragment mContext;
     private String mCategory;
+    private LookUpResponse.Results mResults;
+    private MainActivity activityContext;
+    private BottomSheetDialog bottomSheetDialog;
+    private boolean isClicked = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,9 +78,23 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         mSwipeRefresh.setOnRefreshListener(this::networkCall);
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        activityContext = (MainActivity) getActivity();
+    }
+
     private void networkCall() {
+        showAnimation(true);
+        int cacheSize = 10 * 1024 * 1024; // 10 MB
+        Cache cache = new Cache(getActivity().getCacheDir(), cacheSize);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .cache(cache)
+                .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(AppConstants.BASE_URL)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -77,6 +104,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
             @Override
             public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
                 ApiResponse mData = response.body();
+                showAnimation(false);
                 if (mData != null) {
                     mSwipeRefresh.setRefreshing(false);
                     mEntryData = mData.getFeed().getEntry();
@@ -95,8 +123,12 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
 
     @Override
     public void onPodcastClick(Entry item, int position) {
-        String id = item.getFeedId().getAttributes().getIm();
-        lookUpCall(id,item);
+        if (isClicked) {
+            isClicked = false;
+            showAnimation(true);
+            String id = item.getFeedId().getAttributes().getIm();
+            lookUpCall(id, item);
+        }
     }
 
     private void lookUpCall(String id, Entry item) {
@@ -112,8 +144,8 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
             public void onResponse(@NonNull Call<LookUpResponse> call, @NonNull Response<LookUpResponse> response) {
                 LookUpResponse data = response.body();
                 if (data != null) {
-                    LookUpResponse.Results result = data.getResults().get(0);
-                    openBottomDialog(item,result);
+                    mResults = data.getResults().get(0);
+                    openBottomDialog(item, mResults);
                 }
             }
 
@@ -125,13 +157,34 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     }
 
     private void openBottomDialog(Entry item, LookUpResponse.Results results) {
-        RoundedBottomSheet dialog = new RoundedBottomSheet();
-        if (getFragmentManager() != null) {
-            Bundle b = new Bundle();
-            b.putParcelable(AppConstants.ENTRY_KEY,item);
-            b.putParcelable(AppConstants.RESULTS_KEY,results);
-            dialog.setArguments(b);
-            dialog.show(getFragmentManager(),TAG);
+        bottomSheetDialog = CustomBottomSheet.showBottomDialog(getActivity(), item, results.getArtWork(), view -> {
+            Intent intent = new Intent(getContext(), EpisodesActivity.class);
+            intent.putExtra(AppConstants.FEED_URL_KEY, mResults.getFeedUrl());
+            intent.putExtra(AppConstants.ARTWORK_URL, mResults.getArtWork());
+            showBottomDialog(false);
+            startActivity(intent);
+        }, view -> {
+            //Logic for Subscribe
+        });
+        showBottomDialog(true);
+        isClicked = true;
+        showAnimation(false);
+    }
+
+    private void showBottomDialog(boolean show) {
+        if (bottomSheetDialog != null) {
+            if (show) {
+                bottomSheetDialog.show();
+            } else {
+                bottomSheetDialog.dismiss();
+            }
+        }
+    }
+
+    @Override
+    public void showAnimation(boolean show) {
+        if (activityContext != null) {
+            activityContext.showAnimation(show);
         }
     }
 }

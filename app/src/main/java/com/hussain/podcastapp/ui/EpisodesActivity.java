@@ -67,7 +67,7 @@ public class EpisodesActivity extends AppCompatActivity implements EpisodeAdapte
 
     private void setUI() {
         if (mChannel != null && mItems != null) {
-            String episodesText = mItems.size() + getResources().getString(R.string.episodes_text);
+            String episodesText = mItems.size() + " " + getResources().getString(R.string.episodes_text);
             mTitle.setText(mChannel.getTitle());
             mDescription.setText(Html.fromHtml(mChannel.getDescription()));
             mTvEpispodes.setText(episodesText);
@@ -105,7 +105,7 @@ public class EpisodesActivity extends AppCompatActivity implements EpisodeAdapte
                     mItems = mChannel.getItems();
                     setUI();
                 } else {
-                    Toast.makeText(getApplicationContext(), "SERVER DOWN FOR THIS PODCAST!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Podcast not available, Try again later!", Toast.LENGTH_SHORT).show();
                 }
             }
 
