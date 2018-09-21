@@ -18,7 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.EpisodesActivity"></activity>
+        <activity
+            android:name=".ui.EpisodesActivity"
+            android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.PlayerActivity"
+            android:parentActivityName=".ui.EpisodesActivity" />
     </application>
 
 </manifest>

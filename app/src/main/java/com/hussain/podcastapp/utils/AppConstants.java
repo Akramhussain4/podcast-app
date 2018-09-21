@@ -20,4 +20,7 @@ public final class AppConstants {
     public static final String RESULTS_KEY = "ResultsDataKey";
     public static final String FEED_URL_KEY = "FeedUrlKey";
     public static final String ARTWORK_URL = "ArtworkUrl";
+
+    public static final String BUNDLE_KEY = "BundleKey";
+    public static final String ITEM_KEY = "ItemKey";
 }

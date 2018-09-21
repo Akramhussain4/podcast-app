@@ -10,6 +10,7 @@
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:transitionName="@string/transition_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

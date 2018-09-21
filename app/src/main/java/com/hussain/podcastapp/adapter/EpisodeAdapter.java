@@ -41,7 +41,8 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
 
     @Override
     public void onBindViewHolder(@NonNull EpisodeViewHolder episodeViewHolder, int i) {
-        final Item item = mItemList.get(i);
+        int position = i;
+        final Item item = mItemList.get(position);
         episodeViewHolder.mTitle.setText(item.getTitle());
         episodeViewHolder.mSummary.setText(item.getSummary());
         episodeViewHolder.mDuration.setText(item.getDuration());
@@ -51,6 +52,11 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(episodeViewHolder.mThumb);
+        episodeViewHolder.itemView.setOnClickListener(view -> {
+            if (mClickListener != null) {
+                mClickListener.onEpisodeClick(item, position, episodeViewHolder.mThumb);
+            }
+        });
     }
 
     @Override
@@ -59,7 +65,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
     }
 
     public interface EpisodeClickListener {
-        void onEpisodeClick(Item item, int position);
+        void onEpisodeClick(Item item, int position, ImageView imageView);
     }
 
     class EpisodeViewHolder extends RecyclerView.ViewHolder {

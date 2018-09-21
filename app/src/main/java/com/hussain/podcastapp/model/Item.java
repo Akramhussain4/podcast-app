@@ -1,12 +1,15 @@
 package com.hussain.podcastapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Text;
 
 @Root(name = "item", strict = false)
-public class Item {
+public class Item implements Parcelable {
 
     @Path("title")
     @Text(required = false)
@@ -27,6 +30,19 @@ public class Item {
     @Path("enclosure")
     @Attribute(name = "url")
     public String url;
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {
+        @Override
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -66,6 +82,31 @@ public class Item {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Item() {
+    }
+
+    protected Item(Parcel in) {
+        title = in.readString();
+        summary = in.readString();
+        image = in.readString();
+        duration = in.readString();
+        url = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(summary);
+        dest.writeString(image);
+        dest.writeString(duration);
+        dest.writeString(url);
     }
 }
 

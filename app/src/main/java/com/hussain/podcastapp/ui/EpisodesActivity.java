@@ -1,12 +1,15 @@
 package com.hussain.podcastapp.ui;
 
+import android.annotation.SuppressLint;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
@@ -26,7 +29,6 @@ import com.hussain.podcastapp.utils.GlideApp;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,9 +36,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-public class EpisodesActivity extends AppCompatActivity implements EpisodeAdapter.EpisodeClickListener {
+public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.EpisodeClickListener {
 
     private static final String TAG = EpisodesActivity.class.getName();
+
     @BindView(R.id.tvTitle)
     TextView mTitle;
     @BindView(R.id.tvDescription)
@@ -52,15 +55,14 @@ public class EpisodesActivity extends AppCompatActivity implements EpisodeAdapte
     private List<Item> mItems;
     private Channel mChannel;
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_episodes);
-        ButterKnife.bind(this);
+        onCreate(savedInstanceState, R.layout.activity_episodes);
         Intent b = getIntent();
-        if (b != null) {
-            String mFeedUrl = b.getStringExtra(AppConstants.FEED_URL_KEY);
-            mArtworkUrl = b.getStringExtra(AppConstants.ARTWORK_URL);
+        String mFeedUrl = b.getStringExtra(AppConstants.FEED_URL_KEY);
+        mArtworkUrl = b.getStringExtra(AppConstants.ARTWORK_URL);
+        if (mFeedUrl != null) {
             RssFeed(mFeedUrl);
         }
     }
@@ -76,13 +78,15 @@ public class EpisodesActivity extends AppCompatActivity implements EpisodeAdapte
                     .placeholder(R.drawable.ic_launcher_foreground)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mArtwork);
-            EpisodeAdapter adapter = new EpisodeAdapter(mItems,this);
+            EpisodeAdapter adapter = new EpisodeAdapter(mItems, this);
             rvEpisodes.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             rvEpisodes.setAdapter(adapter);
+            showAnimation(false);
         }
     }
 
     private void RssFeed(String url) {
+        showAnimation(true);
         Uri uri = Uri.parse(url);
         String protocol = uri.getScheme();
         String server = uri.getAuthority();
@@ -117,8 +121,20 @@ public class EpisodesActivity extends AppCompatActivity implements EpisodeAdapte
     }
 
     @Override
-    public void onEpisodeClick(Item item, int position) {
+    public void onEpisodeClick(Item item, int position, ImageView view) {
+        Intent intent = new Intent(this, PlayerActivity.class);
+        Bundle dataBundle = new Bundle();
+        dataBundle.putParcelable(AppConstants.ITEM_KEY, item);
+        intent.putExtra(AppConstants.BUNDLE_KEY, dataBundle);
+        Bundle transitionBundle = ActivityOptions.makeSceneTransitionAnimation(this, view, view.getTransitionName()).toBundle();
+        startActivity(intent, transitionBundle);
 
+    }
+
+    @Override
+    public void onToolBarSetUp(Toolbar toolbar, ActionBar actionBar) {
+        TextView tvHeader = toolbar.findViewById(R.id.tvClassName);
+        tvHeader.setText("Pod play");
     }
 }
 

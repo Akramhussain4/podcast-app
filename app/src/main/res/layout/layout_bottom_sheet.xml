@@ -62,13 +62,12 @@
         style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorAccent"
         android:drawableEnd="@drawable/ic_eye_white_24dp"
         android:text="View"
         android:textAllCaps="false"
-        app:layout_constraintBottom_toTopOf="@+id/tvTitle"
+        app:layout_constraintBottom_toBottomOf="@+id/ivThumbnail"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
@@ -76,9 +75,9 @@
         style="@android:style/Widget.Material.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:text="Subscribe"
-        app:layout_constraintBottom_toTopOf="@+id/btView"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/btView"
+        app:layout_constraintEnd_toStartOf="@+id/btView"
+        app:layout_constraintTop_toTopOf="@+id/btView" />
 </android.support.constraint.ConstraintLayout>

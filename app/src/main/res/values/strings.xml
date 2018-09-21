@@ -9,4 +9,5 @@
 
     <string name="podcast_thumbnail">podcast thumbnail</string>
     <string name="episodes_text"> Episodes</string>
+    <string name="transition_name">transition_podcast_pic</string>
 </resources>
