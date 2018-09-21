@@ -1,4 +1,4 @@
-package com.hussain.podcastapp.ui;
+package com.hussain.podcastapp.base;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
-import com.hussain.podcastapp.IBaseView;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.customview.TransparentLoadAnimation;
 
@@ -20,7 +19,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 
     private TransparentLoadAnimation loadAnimation;
     @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+    public Toolbar mToolbar;
 
     protected final void onCreate(Bundle savedInstanceState, int resourceLayout) {
         super.onCreate(savedInstanceState);

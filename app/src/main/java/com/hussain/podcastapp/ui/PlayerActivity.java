@@ -21,6 +21,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.hussain.podcastapp.R;
+import com.hussain.podcastapp.base.BaseActivity;
 import com.hussain.podcastapp.model.Item;
 import com.hussain.podcastapp.utils.AppConstants;
 import com.hussain.podcastapp.utils.GlideApp;

@@ -14,9 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hussain.podcastapp.IBaseView;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.PodcastAdapter;
+import com.hussain.podcastapp.base.IBaseView;
 import com.hussain.podcastapp.customview.CustomBottomSheet;
 import com.hussain.podcastapp.database.ApiInterface;
 import com.hussain.podcastapp.model.ApiResponse;

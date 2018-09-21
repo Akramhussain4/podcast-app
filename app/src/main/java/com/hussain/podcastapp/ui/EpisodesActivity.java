@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.EpisodeAdapter;
+import com.hussain.podcastapp.base.BaseActivity;
 import com.hussain.podcastapp.database.ApiInterface;
 import com.hussain.podcastapp.model.Channel;
 import com.hussain.podcastapp.model.Item;
