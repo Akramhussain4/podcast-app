@@ -47,7 +47,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
         final Entry item = mEntry.get(i);
         GlideApp.with(mContext)
                 .load(mEntry.get(i).getImage().get(2).getLabel())
-                .placeholder(R.drawable.ic_launcher_foreground)
+                .placeholder(R.color.colorPrimary)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(GlidePalette.with(mEntry.get(i).getImage().get(2).getLabel())
                         .intoCallBack(palette -> {

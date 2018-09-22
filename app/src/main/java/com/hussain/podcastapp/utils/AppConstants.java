@@ -23,4 +23,5 @@ public final class AppConstants {
 
     public static final String BUNDLE_KEY = "BundleKey";
     public static final String ITEM_KEY = "ItemKey";
+    public static final String SCROLL_POSITION = "ScrollKey";
 }

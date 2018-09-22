@@ -21,9 +21,10 @@
         <activity
             android:name=".ui.EpisodesActivity"
             android:parentActivityName=".ui.MainActivity" />
+        <activity android:name=".ui.PlayerActivity" />
         <activity
-            android:name=".ui.PlayerActivity"
-            android:parentActivityName=".ui.EpisodesActivity" />
+            android:name=".ui.AboutActivity"
+            android:parentActivityName=".ui.MainActivity" />
     </application>
 
 </manifest>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PodcastApp</string>
+    <string name="app_name">Pod play</string>
     <array name="titles">
         <item>TECH</item>
         <item>Science</item>
@@ -10,4 +10,11 @@
     <string name="podcast_thumbnail">podcast thumbnail</string>
     <string name="episodes_text"> Episodes</string>
     <string name="transition_name">transition_podcast_pic</string>
+    <string name="download_podcast">Download podcast</string>
+    <string name="share">Share</string>
+    <string name="no_podcast">This Podcast is not available at the moment</string>
+    <string name="mohammed_akram_hussain">Mohammed Akram Hussain</string>
+    <string name="google_certified_android_developer">Google certified Android Developer</string>
+    <string name="computer_science_engineer">Computer Science Engineer</string>
+    <string name="display_pic">Display pic</string>
 </resources>

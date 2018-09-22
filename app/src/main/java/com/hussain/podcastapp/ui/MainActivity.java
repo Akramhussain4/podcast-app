@@ -1,6 +1,7 @@
 package com.hussain.podcastapp.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -58,12 +59,18 @@ public class MainActivity extends BaseActivity {
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withIdentifier(1).withName("Home"),
+                        new PrimaryDrawerItem().withIdentifier(2).withName("Subscriptions"),
+                        new PrimaryDrawerItem().withIdentifier(3).withName("Offline Podcasts"),
                         new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withIdentifier(2).withName("Subscriptions")
+                        new SecondaryDrawerItem().withIdentifier(4).withName("About")
                 )
                 .withOnDrawerItemClickListener((view, position, drawerItem) -> {
-                    // do something with the clicked item :D
-                    return true;
+                    if (drawerItem != null) {
+                        if (drawerItem.getIdentifier() == 4) {
+                            startActivity(new Intent(this, AboutActivity.class));
+                        }
+                    }
+                    return false;
                 })
                 .build();
     }
@@ -71,6 +78,6 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onToolBarSetUp(Toolbar toolbar, ActionBar actionBar) {
         TextView tvHeader = toolbar.findViewById(R.id.tvClassName);
-        tvHeader.setText("Pod play");
+        tvHeader.setText(R.string.app_name);
     }
 }

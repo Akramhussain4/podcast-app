@@ -6,15 +6,18 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hussain.podcastapp.R;
@@ -51,6 +54,13 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
     TextView mTvEpispodes;
     @BindView(R.id.rvEpisodes)
     RecyclerView rvEpisodes;
+    @BindView(R.id.tvError)
+    TextView mTvError;
+    @BindView(R.id.error_layout)
+    ConstraintLayout mErrorLayout;
+    @Nullable
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout mEpisodeLayout;
 
     private String mArtworkUrl;
     private List<Item> mItems;
@@ -65,6 +75,7 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
         mArtworkUrl = b.getStringExtra(AppConstants.ARTWORK_URL);
         if (mFeedUrl != null) {
             RssFeed(mFeedUrl);
+            rvEpisodes.setLayoutManager(new LinearLayoutManager(this));
         }
     }
 
@@ -76,11 +87,10 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
             mTvEpispodes.setText(episodesText);
             GlideApp.with(this)
                     .load(mArtworkUrl)
-                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .placeholder(R.color.colorPrimary)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mArtwork);
             EpisodeAdapter adapter = new EpisodeAdapter(mItems, this);
-            rvEpisodes.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             rvEpisodes.setAdapter(adapter);
             showAnimation(false);
         }
@@ -110,7 +120,10 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
                     mItems = mChannel.getItems();
                     setUI();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Podcast not available, Try again later!", Toast.LENGTH_SHORT).show();
+                    mEpisodeLayout.setVisibility(View.GONE);
+                    mErrorLayout.setVisibility(View.VISIBLE);
+                    mTvError.setText(R.string.no_podcast);
+                    showAnimation(false);
                 }
             }
 
@@ -133,9 +146,21 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putParcelable(AppConstants.SCROLL_POSITION, rvEpisodes.getLayoutManager().onSaveInstanceState());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        rvEpisodes.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(AppConstants.SCROLL_POSITION));
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void onToolBarSetUp(Toolbar toolbar, ActionBar actionBar) {
         TextView tvHeader = toolbar.findViewById(R.id.tvClassName);
-        tvHeader.setText("Pod play");
+        tvHeader.setText(R.string.app_name);
     }
 }
 

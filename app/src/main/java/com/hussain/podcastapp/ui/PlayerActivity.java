@@ -5,6 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +20,6 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.hussain.podcastapp.R;
@@ -30,8 +32,6 @@ import butterknife.BindView;
 
 public class PlayerActivity extends BaseActivity {
 
-    private static final DefaultBandwidthMeter BANDWIDTH_METER =
-            new DefaultBandwidthMeter();
     @BindView(R.id.video_view)
     PlayerView mPlayerView;
     @BindView(R.id.tvTitle)
@@ -58,7 +58,7 @@ public class PlayerActivity extends BaseActivity {
     }
 
     private void initializePlayer() {
-        if (player == null) {
+        if (player == null && !mURL.isEmpty()) {
             player = ExoPlayerFactory.newSimpleInstance(
                     new DefaultRenderersFactory(this),
                     new DefaultTrackSelector(), new DefaultLoadControl());
@@ -93,7 +93,7 @@ public class PlayerActivity extends BaseActivity {
         mTvSummary.setText(mSummary);
         GlideApp.with(this)
                 .load(mImage)
-                .placeholder(R.drawable.ic_launcher_foreground)
+                .placeholder(R.color.colorPrimary)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(mIvThumb);
     }
@@ -122,6 +122,30 @@ public class PlayerActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.player_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.share_podcast:
+                //Logic for Share
+                return true;
+            case R.id.download_podcast:
+                //Logic for download
+                return true;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void releasePlayer() {
         if (player != null) {
             long playbackPosition = player.getCurrentPosition();
@@ -135,6 +159,7 @@ public class PlayerActivity extends BaseActivity {
     @Override
     public void onToolBarSetUp(Toolbar toolbar, ActionBar actionBar) {
         TextView tvHeader = toolbar.findViewById(R.id.tvClassName);
-        tvHeader.setText("Pod play");
+        tvHeader.setText(R.string.app_name);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
     }
 }

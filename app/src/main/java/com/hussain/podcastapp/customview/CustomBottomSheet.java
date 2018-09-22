@@ -37,7 +37,7 @@ public class CustomBottomSheet {
         tvSummary.setText(item.getSummary().getLabel());
         GlideApp.with(activity)
                 .load(artWork)
-                .placeholder(R.drawable.ic_launcher_foreground)
+                .placeholder(R.color.colorPrimary)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivThumbnail);
         if (btView != null) {

@@ -1,6 +1,5 @@
 package com.hussain.podcastapp.base;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +37,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-            mToolbar.setTitleTextColor(Color.WHITE);
         }
         onToolBarSetUp(mToolbar, getSupportActionBar());
     }

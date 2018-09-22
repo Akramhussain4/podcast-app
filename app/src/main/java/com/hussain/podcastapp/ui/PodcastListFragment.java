@@ -1,6 +1,7 @@
 package com.hussain.podcastapp.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,8 +50,8 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     private PodcastListFragment mContext;
     private String mCategory;
     private LookUpResponse.Results mResults;
-    private MainActivity activityContext;
-    private BottomSheetDialog bottomSheetDialog;
+    private MainActivity mActivityContext;
+    private BottomSheetDialog mBottomDialog;
     private boolean isClicked = true;
 
     @Override
@@ -67,6 +68,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_podcasts_list, container, false);
         ButterKnife.bind(this, view);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getSpan()));
         mContext = this;
         return view;
     }
@@ -81,8 +83,9 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        activityContext = (MainActivity) getActivity();
+        mActivityContext = (MainActivity) getActivity();
     }
+
 
     private void networkCall() {
         showAnimation(true);
@@ -109,7 +112,6 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
                     mSwipeRefresh.setRefreshing(false);
                     mEntryData = mData.getFeed().getEntry();
                     PodcastAdapter podcastAdapter = new PodcastAdapter(mEntryData, mContext);
-                    mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
                     mRecyclerView.setAdapter(podcastAdapter);
                 }
             }
@@ -119,6 +121,13 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
                 Log.d(TAG, t.getMessage());
             }
         });
+    }
+
+    private int getSpan() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return 4;
+        }
+        return 2;
     }
 
     @Override
@@ -157,7 +166,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     }
 
     private void openBottomDialog(Entry item, LookUpResponse.Results results) {
-        bottomSheetDialog = CustomBottomSheet.showBottomDialog(getActivity(), item, results.getArtWork(), view -> {
+        mBottomDialog = CustomBottomSheet.showBottomDialog(getActivity(), item, results.getArtWork(), view -> {
             Intent intent = new Intent(getContext(), EpisodesActivity.class);
             intent.putExtra(AppConstants.FEED_URL_KEY, mResults.getFeedUrl());
             intent.putExtra(AppConstants.ARTWORK_URL, mResults.getArtWork());
@@ -172,19 +181,19 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     }
 
     private void showBottomDialog(boolean show) {
-        if (bottomSheetDialog != null) {
+        if (mBottomDialog != null) {
             if (show) {
-                bottomSheetDialog.show();
+                mBottomDialog.show();
             } else {
-                bottomSheetDialog.dismiss();
+                mBottomDialog.dismiss();
             }
         }
     }
 
     @Override
     public void showAnimation(boolean show) {
-        if (activityContext != null) {
-            activityContext.showAnimation(show);
+        if (mActivityContext != null) {
+            mActivityContext.showAnimation(show);
         }
     }
 }
