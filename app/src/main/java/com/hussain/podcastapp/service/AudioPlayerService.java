@@ -21,6 +21,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.model.Item;
 import com.hussain.podcastapp.ui.PlayerActivity;
 import com.hussain.podcastapp.utils.AppConstants;
@@ -55,6 +56,7 @@ public class AudioPlayerService extends Service {
         return player;
     }
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle b = intent.getBundleExtra(AppConstants.BUNDLE_KEY);
@@ -65,23 +67,19 @@ public class AudioPlayerService extends Service {
         return START_STICKY;
     }
 
-    @Override
-    public void onRebind(Intent intent) {
-        stopForeground(true);
-        super.onRebind(intent);
-    }
-
     private void startPlayer() {
         final Context context = this;
         Uri uri = Uri.parse(item.getUrl());
         player = ExoPlayerFactory.newSimpleInstance(context, new DefaultTrackSelector());
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
-                Util.getUserAgent(context, "podplay"));
+                Util.getUserAgent(context, getString(R.string.app_name)));
         MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(uri);
         player.prepare(mediaSource);
         player.setPlayWhenReady(true);
-        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(context, "podplay", 0, 1,
+        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(context, AppConstants.PLAYBACK_CHANNEL_ID,
+                R.string.playback_channel_name,
+                AppConstants.PLAYBACK_NOTIFICATION_ID,
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
                     public String getCurrentContentTitle(Player player) {

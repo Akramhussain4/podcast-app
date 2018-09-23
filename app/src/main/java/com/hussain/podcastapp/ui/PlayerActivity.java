@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBar;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.util.Util;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.base.BaseActivity;
 import com.hussain.podcastapp.model.Item;
@@ -41,7 +39,6 @@ public class PlayerActivity extends BaseActivity {
     ImageView mIvThumb;
     private SimpleExoPlayer player;
     private String mURL, mTitle, mSummary, mImage;
-    private Bitmap theBitmap;
     private AudioPlayerService mService;
     private boolean mBound = false;
 
@@ -74,7 +71,7 @@ public class PlayerActivity extends BaseActivity {
             Bundle serviceBundle = new Bundle();
             serviceBundle.putParcelable(AppConstants.ITEM_KEY, item);
             intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
-            Util.startForegroundService(this, intent);
+            //Util.startForegroundService(this, intent);
             bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         }
     }
@@ -91,10 +88,8 @@ public class PlayerActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > 23) {
             initializePlayer();
             setUI();
-        }
     }
 
     private void setUI() {
@@ -110,21 +105,15 @@ public class PlayerActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if ((Util.SDK_INT <= 23 || player == null)) {
-            initializePlayer();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        releasePlayer();
+        initializePlayer();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        unbindService(mConnection);
+        mBound = false;
         releasePlayer();
+        super.onDestroy();
     }
 
     @Override
@@ -153,11 +142,6 @@ public class PlayerActivity extends BaseActivity {
 
     private void releasePlayer() {
         if (player != null) {
-            unbindService(mConnection);
-            mBound = false;
-            long playbackPosition = player.getCurrentPosition();
-            long currentWindow = player.getCurrentWindowIndex();
-            boolean playWhenReady = player.getPlayWhenReady();
             player.release();
             player = null;
         }
