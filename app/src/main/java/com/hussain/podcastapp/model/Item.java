@@ -1,5 +1,6 @@
 package com.hussain.podcastapp.model;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -30,6 +31,21 @@ public class Item implements Parcelable {
     @Path("enclosure")
     @Attribute(name = "url")
     public String url;
+
+    public Bitmap bitmap;
+
+    protected Item(Parcel in) {
+        title = in.readString();
+        summary = in.readString();
+        image = in.readString();
+        duration = in.readString();
+        url = in.readString();
+        bitmap = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
 
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<Item> CREATOR = new Parcelable.Creator<Item>() {
@@ -87,12 +103,8 @@ public class Item implements Parcelable {
     public Item() {
     }
 
-    protected Item(Parcel in) {
-        title = in.readString();
-        summary = in.readString();
-        image = in.readString();
-        duration = in.readString();
-        url = in.readString();
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
     }
 
     @Override
@@ -107,6 +119,7 @@ public class Item implements Parcelable {
         dest.writeString(image);
         dest.writeString(duration);
         dest.writeString(url);
+        dest.writeValue(bitmap);
     }
 }
 

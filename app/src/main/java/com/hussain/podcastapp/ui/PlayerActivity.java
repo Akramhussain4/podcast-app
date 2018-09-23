@@ -1,8 +1,13 @@
 package com.hussain.podcastapp.ui;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -12,19 +17,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.base.BaseActivity;
 import com.hussain.podcastapp.model.Item;
+import com.hussain.podcastapp.service.AudioPlayerService;
 import com.hussain.podcastapp.utils.AppConstants;
 import com.hussain.podcastapp.utils.GlideApp;
 
@@ -42,6 +41,23 @@ public class PlayerActivity extends BaseActivity {
     ImageView mIvThumb;
     private SimpleExoPlayer player;
     private String mURL, mTitle, mSummary, mImage;
+    private Bitmap theBitmap;
+    private AudioPlayerService mService;
+    private boolean mBound = false;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            AudioPlayerService.LocalBinder binder = (AudioPlayerService.LocalBinder) iBinder;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBound = false;
+        }
+    };
 
     @SuppressLint("MissingSuperCall")
     @Override
@@ -54,29 +70,22 @@ public class PlayerActivity extends BaseActivity {
             mImage = item.getImage();
             mTitle = item.getTitle();
             mSummary = item.getSummary();
+            Intent intent = new Intent(this, AudioPlayerService.class);
+            Bundle serviceBundle = new Bundle();
+            serviceBundle.putParcelable(AppConstants.ITEM_KEY, item);
+            intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
+            Util.startForegroundService(this, intent);
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         }
     }
 
     private void initializePlayer() {
-        if (player == null && !mURL.isEmpty()) {
-            player = ExoPlayerFactory.newSimpleInstance(
-                    new DefaultRenderersFactory(this),
-                    new DefaultTrackSelector(), new DefaultLoadControl());
-
+        if (player == null && !mURL.isEmpty() && mBound) {
+            player = mService.getplayerInstance();
             mPlayerView.setPlayer(player);
             mPlayerView.setControllerHideOnTouch(false);
             mPlayerView.setControllerShowTimeoutMs(10800000);
-            player.setPlayWhenReady(true);
-            Uri uri = Uri.parse(mURL);
-            MediaSource mediaSource = buildMediaSource(uri);
-            player.prepare(mediaSource, true, false);
         }
-    }
-
-    private MediaSource buildMediaSource(Uri uri) {
-        return new ExtractorMediaSource.Factory(
-                new DefaultHttpDataSourceFactory("podplay")).
-                createMediaSource(uri);
     }
 
     @Override
@@ -107,19 +116,15 @@ public class PlayerActivity extends BaseActivity {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        if (Util.SDK_INT <= 23) {
-            releasePlayer();
-        }
+    protected void onStop() {
+        super.onStop();
+        releasePlayer();
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        if (Util.SDK_INT > 23) {
-            releasePlayer();
-        }
+    protected void onDestroy() {
+        super.onDestroy();
+        releasePlayer();
     }
 
     @Override
@@ -148,6 +153,8 @@ public class PlayerActivity extends BaseActivity {
 
     private void releasePlayer() {
         if (player != null) {
+            unbindService(mConnection);
+            mBound = false;
             long playbackPosition = player.getCurrentPosition();
             long currentWindow = player.getCurrentWindowIndex();
             boolean playWhenReady = player.getPlayWhenReady();

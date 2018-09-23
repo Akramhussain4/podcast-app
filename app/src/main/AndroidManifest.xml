@@ -25,6 +25,13 @@
         <activity
             android:name=".ui.AboutActivity"
             android:parentActivityName=".ui.MainActivity" />
+
+        <service android:name=".service.MediaPlaybackService">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+        <service android:name=".service.AudioPlayerService" />
     </application>
 
 </manifest>

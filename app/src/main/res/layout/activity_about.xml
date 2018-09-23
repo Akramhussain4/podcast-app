@@ -18,7 +18,7 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:contentDescription="@string/display_pic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +33,8 @@
         android:fontFamily="sans-serif"
         android:text="@string/mohammed_akram_hussain"
         android:textColor="@color/colorBlack"
-        android:textSize="18sp"
+        android:textSize="22sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -45,7 +46,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/google_certified_android_developer"
         android:textColor="@color/colorBlack"
-        android:textSize="12sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvName" />
@@ -57,7 +58,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/computer_science_engineer"
         android:textColor="@color/colorBlack"
-        android:textSize="12sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvCertification" />
@@ -67,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -79,17 +80,20 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvGooglePlay"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="32dp"
                 android:text="Google Play"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-                app:layout_constraintStart_toEndOf="@+id/imageView5"
-                app:layout_constraintTop_toTopOf="@+id/imageView5" />
+                app:layout_constraintBottom_toBottomOf="@+id/ivGooglePlay"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.6"
+                app:layout_constraintStart_toEndOf="@+id/ivGooglePlay"
+                app:layout_constraintTop_toTopOf="@+id/ivGooglePlay" />
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/ivGooglePlay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
@@ -101,17 +105,19 @@
                 app:srcCompat="@drawable/ic_google_play" />
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvGitHub"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="32dp"
                 android:text="GitHub"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-                app:layout_constraintStart_toEndOf="@+id/imageView4"
-                app:layout_constraintTop_toTopOf="@+id/imageView4" />
+                app:layout_constraintBottom_toBottomOf="@+id/ivGitHub"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ivGitHub"
+                app:layout_constraintTop_toTopOf="@+id/ivGitHub" />
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/ivGitHub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -130,20 +136,22 @@
                 android:background="@color/md_blue_grey_50"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+                app:layout_constraintTop_toBottomOf="@+id/ivGitHub" />
 
             <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvLinkedIn"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="32dp"
                 android:text="LinkedIn"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-                app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toTopOf="@+id/imageView3" />
+                app:layout_constraintBottom_toBottomOf="@+id/ivLinkedIn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ivLinkedIn"
+                app:layout_constraintTop_toTopOf="@+id/ivLinkedIn" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/ivLinkedIn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -162,19 +170,22 @@
                 android:background="@color/md_blue_grey_50"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintTop_toBottomOf="@+id/ivEmail" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/tvEmail"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
                 android:layout_marginStart="32dp"
                 android:text="Email"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="@+id/imageView2" />
+                app:layout_constraintBottom_toBottomOf="@+id/ivEmail"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ivEmail"
+                app:layout_constraintTop_toTopOf="@+id/ivEmail" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/ivEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -193,7 +204,7 @@
                 android:background="@color/md_blue_grey_50"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                app:layout_constraintTop_toBottomOf="@+id/ivLinkedIn" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 </android.support.constraint.ConstraintLayout>

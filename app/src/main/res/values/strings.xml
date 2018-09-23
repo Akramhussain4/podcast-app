@@ -17,4 +17,8 @@
     <string name="google_certified_android_developer">Google certified Android Developer</string>
     <string name="computer_science_engineer">Computer Science Engineer</string>
     <string name="display_pic">Display pic</string>
+    <string name="label_play">Play</string>
+    <string name="label_pause">Pause</string>
+    <string name="label_forward">Forward</string>
+    <string name="label_backward">Backward</string>
 </resources>
