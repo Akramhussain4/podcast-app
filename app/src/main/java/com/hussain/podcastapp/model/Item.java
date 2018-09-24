@@ -18,7 +18,7 @@ public class Item implements Parcelable {
 
     @Path("itunes:summary")
     @Text(required = false)
-    public String summary = "";
+    private String summary = "";
 
     @Path("itunes:image")
     @Attribute(name = "href")
@@ -26,15 +26,15 @@ public class Item implements Parcelable {
 
     @Path("itunes:duration")
     @Text(required = false)
-    public String duration;
+    private String duration;
 
     @Path("enclosure")
     @Attribute(name = "url")
-    public String url;
+    private String url;
 
-    public Bitmap bitmap;
+    private Bitmap bitmap;
 
-    protected Item(Parcel in) {
+    private Item(Parcel in) {
         title = in.readString();
         summary = in.readString();
         image = in.readString();

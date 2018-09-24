@@ -10,6 +10,9 @@ public class ApiResponse {
         return feed;
     }
 
+    public ApiResponse() {
+    }
+
     public void setFeed(Feed feed) {
         this.feed = feed;
     }

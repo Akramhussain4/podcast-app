@@ -20,10 +20,12 @@ import com.hussain.podcastapp.adapter.PodcastAdapter;
 import com.hussain.podcastapp.base.IBaseView;
 import com.hussain.podcastapp.customview.CustomBottomSheet;
 import com.hussain.podcastapp.database.ApiInterface;
+import com.hussain.podcastapp.database.AppDatabase;
 import com.hussain.podcastapp.model.ApiResponse;
 import com.hussain.podcastapp.model.Entry;
 import com.hussain.podcastapp.model.LookUpResponse;
 import com.hussain.podcastapp.utils.AppConstants;
+import com.hussain.podcastapp.utils.AppExecutors;
 
 import java.util.List;
 
@@ -54,6 +56,8 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     private BottomSheetDialog mBottomDialog;
     private boolean isClicked = true;
 
+    private AppDatabase mDb;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         if (b != null) {
             mCategory = b.getString(AppConstants.CATEGORY_KEY);
         }
+        mDb = AppDatabase.getInstance(getContext());
     }
 
     @Override
@@ -135,7 +140,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         if (isClicked) {
             isClicked = false;
             showAnimation(true);
-            String id = item.getFeedId().getAttributes().getIm();
+            String id = item.getFeedId().getAttributes().getId();
             lookUpCall(id, item);
         }
     }
@@ -166,15 +171,57 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     }
 
     private void openBottomDialog(Entry item, LookUpResponse.Results results) {
+        String feedId = item.getFeedId().getAttributes().getId();
+        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Entry entry = mDb.entryDao().getPodcast(feedId);
+                if (entry != null) {
+                    mActivityContext.runOnUiThread((new Runnable() {
+                        @Override
+                        public void run() {
+                            subscribedPodcast(item, results);
+                        }
+                    }));
+
+                } else {
+                    mActivityContext.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            unSubscribedPodcast(item, results);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void subscribedPodcast(Entry item, LookUpResponse.Results results) {
         mBottomDialog = CustomBottomSheet.showBottomDialog(getActivity(), item, results.getArtWork(), view -> {
             Intent intent = new Intent(getContext(), EpisodesActivity.class);
             intent.putExtra(AppConstants.FEED_URL_KEY, mResults.getFeedUrl());
             intent.putExtra(AppConstants.ARTWORK_URL, mResults.getArtWork());
             showBottomDialog(false);
             startActivity(intent);
-        }, view -> {
-            //Logic for Subscribe
-        });
+        }, view -> AppExecutors.getInstance().getDiskIO().execute(() -> {
+            mDb.entryDao().insertPodcast(item);
+
+        }), true);
+        showBottomDialog(true);
+        isClicked = true;
+        showAnimation(false);
+    }
+
+    private void unSubscribedPodcast(Entry item, LookUpResponse.Results results) {
+        mBottomDialog = CustomBottomSheet.showBottomDialog(getActivity(), item, results.getArtWork(), view -> {
+            Intent intent = new Intent(getContext(), EpisodesActivity.class);
+            intent.putExtra(AppConstants.FEED_URL_KEY, mResults.getFeedUrl());
+            intent.putExtra(AppConstants.ARTWORK_URL, mResults.getArtWork());
+            showBottomDialog(false);
+            startActivity(intent);
+        }, view -> AppExecutors.getInstance().getDiskIO().execute(() -> {
+            mDb.entryDao().insertPodcast(item);
+        }), false);
         showBottomDialog(true);
         isClicked = true;
         showAnimation(false);

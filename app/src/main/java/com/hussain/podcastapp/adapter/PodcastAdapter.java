@@ -57,7 +57,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
                                 podcastViewHolder.mTitle.setTextColor(swatch.getBodyTextColor());
                             }
                         })).into(podcastViewHolder.mThumbnail);
-        podcastViewHolder.mTitle.setText(item.getEntryTitle().getLabel());
+        podcastViewHolder.mTitle.setText(item.getEntryTitle().getLabelTitle());
         podcastViewHolder.itemView.setOnClickListener(v -> {
             if (mClickListener != null) {
                 mClickListener.onPodcastClick(item, podcastViewHolder.getAdapterPosition());

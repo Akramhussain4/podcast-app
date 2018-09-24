@@ -1,23 +1,38 @@
 package com.hussain.podcastapp.model;
 
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Entity(tableName = "entry")
 public class Entry implements Parcelable {
 
+    @NonNull
+    @PrimaryKey
+    @Embedded
     @SerializedName("id")
     private FeedID feedId;
+    @Embedded
     @SerializedName("title")
     private Title EntryTitle;
     @SerializedName("im:image")
-    private List<Image> image;
+    private List<PodcastImage> image;
+    @Embedded
     @SerializedName("summary")
     private Summary summary;
+
+    public Entry() {
+    }
 
     public FeedID getFeedId() {
         return feedId;
@@ -35,12 +50,21 @@ public class Entry implements Parcelable {
         this.EntryTitle = entryTitle;
     }
 
-    public List<Image> getImage() {
-        return image;
+    @Ignore
+    protected Entry(Parcel in) {
+        feedId = (FeedID) in.readValue(FeedID.class.getClassLoader());
+        EntryTitle = (Title) in.readValue(Title.class.getClassLoader());
+        if (in.readByte() == 0x01) {
+            image = new ArrayList<PodcastImage>();
+            in.readList(image, PodcastImage.class.getClassLoader());
+        } else {
+            image = null;
+        }
+        summary = (Summary) in.readValue(Summary.class.getClassLoader());
     }
 
-    public void setImage(List<Image> image) {
-        this.image = image;
+    public List<PodcastImage> getImage() {
+        return image;
     }
 
     public Summary getSummary() {
@@ -64,16 +88,8 @@ public class Entry implements Parcelable {
         }
     };
 
-    protected Entry(Parcel in) {
-        feedId = (FeedID) in.readValue(FeedID.class.getClassLoader());
-        EntryTitle = (Title) in.readValue(Title.class.getClassLoader());
-        if (in.readByte() == 0x01) {
-            image = new ArrayList<Image>();
-            in.readList(image, Image.class.getClassLoader());
-        } else {
-            image = null;
-        }
-        summary = (Summary) in.readValue(Summary.class.getClassLoader());
+    public void setImage(List<PodcastImage> image) {
+        this.image = image;
     }
 
     @Override
@@ -95,16 +111,8 @@ public class Entry implements Parcelable {
     }
 
     public class Title implements Parcelable {
-        private String label;
 
-        public String getLabel() {
-            return label;
-        }
-
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
+        @Ignore
         @SuppressWarnings("unused")
         public final Parcelable.Creator<Title> CREATOR = new Parcelable.Creator<Title>() {
             @Override
@@ -117,9 +125,22 @@ public class Entry implements Parcelable {
                 return new Title[size];
             }
         };
+        private String labelTitle;
 
-        protected Title(Parcel in) {
-            label = in.readString();
+        public Title() {
+        }
+
+        @Ignore
+        Title(Parcel in) {
+            labelTitle = in.readString();
+        }
+
+        public String getLabelTitle() {
+            return labelTitle;
+        }
+
+        public void setLabelTitle(String labelTitle) {
+            this.labelTitle = labelTitle;
         }
 
         @Override
@@ -129,12 +150,27 @@ public class Entry implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(label);
+            dest.writeString(labelTitle);
         }
     }
 
-    public class Image implements Parcelable {
+    public class PodcastImage implements Parcelable {
+
         private String label;
+
+        @Ignore
+        @SuppressWarnings("unused")
+        public final Parcelable.Creator<PodcastImage> CREATOR = new Parcelable.Creator<PodcastImage>() {
+            @Override
+            public PodcastImage createFromParcel(Parcel in) {
+                return new PodcastImage(in);
+            }
+
+            @Override
+            public PodcastImage[] newArray(int size) {
+                return new PodcastImage[size];
+            }
+        };
 
         public String getLabel() {
             return label;
@@ -144,20 +180,11 @@ public class Entry implements Parcelable {
             this.label = label;
         }
 
-        @SuppressWarnings("unused")
-        public final Parcelable.Creator<Image> CREATOR = new Parcelable.Creator<Image>() {
-            @Override
-            public Image createFromParcel(Parcel in) {
-                return new Image(in);
-            }
+        public PodcastImage() {
+        }
 
-            @Override
-            public Image[] newArray(int size) {
-                return new Image[size];
-            }
-        };
-
-        protected Image(Parcel in) {
+        @Ignore
+        PodcastImage(Parcel in) {
             label = in.readString();
         }
 
@@ -173,16 +200,10 @@ public class Entry implements Parcelable {
     }
 
     public class Summary implements Parcelable {
+
         private String label;
 
-        public String getLabel() {
-            return label;
-        }
-
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
+        @Ignore
         @SuppressWarnings("unused")
         public final Parcelable.Creator<Summary> CREATOR = new Parcelable.Creator<Summary>() {
             @Override
@@ -196,7 +217,19 @@ public class Entry implements Parcelable {
             }
         };
 
-        protected Summary(Parcel in) {
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public Summary() {
+        }
+
+        @Ignore
+        Summary(Parcel in) {
             label = in.readString();
         }
 
@@ -213,17 +246,7 @@ public class Entry implements Parcelable {
 
     public class FeedID implements Parcelable {
 
-        private Attributes attributes;
-
-        public Attributes getAttributes() {
-            return attributes;
-        }
-
-        public void setAttributes(Attributes attributes) {
-            this.attributes = attributes;
-        }
-
-
+        @Ignore
         @SuppressWarnings("unused")
         public final Parcelable.Creator<FeedID> CREATOR = new Parcelable.Creator<FeedID>() {
             @Override
@@ -236,8 +259,23 @@ public class Entry implements Parcelable {
                 return new FeedID[size];
             }
         };
+        @Embedded
+        @NonNull
+        private Attributes attributes;
 
-        protected FeedID(Parcel in) {
+        public Attributes getAttributes() {
+            return attributes;
+        }
+
+        public void setAttributes(Attributes attributes) {
+            this.attributes = attributes;
+        }
+
+        public FeedID() {
+        }
+
+        @Ignore
+        FeedID(Parcel in) {
             attributes = (Attributes) in.readValue(Attributes.class.getClassLoader());
         }
 
@@ -254,17 +292,7 @@ public class Entry implements Parcelable {
 
     public class Attributes implements Parcelable {
 
-        @SerializedName("im:id")
-        private String id;
-
-        public String getIm() {
-            return id;
-        }
-
-        public void setIm(String im) {
-            this.id = im;
-        }
-
+        @Ignore
         @SuppressWarnings("unused")
         public final Parcelable.Creator<Attributes> CREATOR = new Parcelable.Creator<Attributes>() {
             @Override
@@ -277,9 +305,24 @@ public class Entry implements Parcelable {
                 return new Attributes[size];
             }
         };
+        @NonNull
+        @SerializedName("im:id")
+        private String id;
 
+        public Attributes() {
+        }
+
+        @Ignore
         protected Attributes(Parcel in) {
             id = in.readString();
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
         }
 
         @Override

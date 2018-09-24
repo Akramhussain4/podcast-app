@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.util.Util;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.base.BaseActivity;
 import com.hussain.podcastapp.model.Item;
@@ -41,6 +42,7 @@ public class PlayerActivity extends BaseActivity {
     private String mURL, mTitle, mSummary, mImage;
     private AudioPlayerService mService;
     private boolean mBound = false;
+    private Intent intent;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -67,12 +69,12 @@ public class PlayerActivity extends BaseActivity {
             mImage = item.getImage();
             mTitle = item.getTitle();
             mSummary = item.getSummary();
-            Intent intent = new Intent(this, AudioPlayerService.class);
+            intent = new Intent(this, AudioPlayerService.class);
             Bundle serviceBundle = new Bundle();
             serviceBundle.putParcelable(AppConstants.ITEM_KEY, item);
             intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
-            //Util.startForegroundService(this, intent);
-            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            Util.startForegroundService(this, intent);
+
         }
     }
 
@@ -88,8 +90,9 @@ public class PlayerActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
-            initializePlayer();
-            setUI();
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        initializePlayer();
+        setUI();
     }
 
     private void setUI() {
@@ -103,17 +106,11 @@ public class PlayerActivity extends BaseActivity {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        initializePlayer();
-    }
-
-    @Override
-    protected void onDestroy() {
+    protected void onStop() {
         unbindService(mConnection);
         mBound = false;
         releasePlayer();
-        super.onDestroy();
+        super.onStop();
     }
 
     @Override

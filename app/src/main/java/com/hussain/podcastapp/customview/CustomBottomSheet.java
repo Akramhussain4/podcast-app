@@ -16,7 +16,7 @@ import java.util.Objects;
 
 public class CustomBottomSheet {
 
-    public static BottomSheetDialog showBottomDialog(Activity activity, Entry item, String artWork, View.OnClickListener viewClickListener, View.OnClickListener subscribeClicklistener) {
+    public static BottomSheetDialog showBottomDialog(Activity activity, Entry item, String artWork, View.OnClickListener viewClickListener, View.OnClickListener subscribeClicklistener, boolean subscribed) {
 
         if (activity == null) {
             return null;
@@ -33,7 +33,12 @@ public class CustomBottomSheet {
         ImageView ivThumbnail = bottomSheetDialog.findViewById(R.id.ivThumbnail);
         Button btView = bottomSheetDialog.findViewById(R.id.btView);
         Button btSubscribe = bottomSheetDialog.findViewById(R.id.btSubscribe);
-        tvTitle.setText(item.getEntryTitle().getLabel());
+        if (subscribed) {
+            btSubscribe.setText("UNSUBSCRIBE");
+        } else {
+            btSubscribe.setText("SUBSCRIBE");
+        }
+        tvTitle.setText(item.getEntryTitle().getLabelTitle());
         tvSummary.setText(item.getSummary().getLabel());
         GlideApp.with(activity)
                 .load(artWork)
