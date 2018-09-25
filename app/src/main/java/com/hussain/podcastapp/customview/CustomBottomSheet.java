@@ -34,9 +34,9 @@ public class CustomBottomSheet {
         Button btView = bottomSheetDialog.findViewById(R.id.btView);
         Button btSubscribe = bottomSheetDialog.findViewById(R.id.btSubscribe);
         if (subscribed) {
-            btSubscribe.setText("UNSUBSCRIBE");
+            btSubscribe.setText(R.string.unsubscribe);
         } else {
-            btSubscribe.setText("SUBSCRIBE");
+            btSubscribe.setText(R.string.subscribe);
         }
         tvTitle.setText(item.getEntryTitle().getLabelTitle());
         tvSummary.setText(item.getSummary().getLabel());
@@ -48,9 +48,7 @@ public class CustomBottomSheet {
         if (btView != null) {
             btView.setOnClickListener(viewClickListener);
         }
-        if (btSubscribe != null) {
-            btSubscribe.setOnClickListener(subscribeClicklistener);
-        }
+        btSubscribe.setOnClickListener(subscribeClicklistener);
         return bottomSheetDialog;
     }
 }

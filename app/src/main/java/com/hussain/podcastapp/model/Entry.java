@@ -110,7 +110,18 @@ public class Entry implements Parcelable {
         dest.writeValue(summary);
     }
 
-    public class Title implements Parcelable {
+    public static class Title implements Parcelable {
+
+        @SerializedName("label")
+        private String labelTitle;
+
+        public Title() {
+        }
+
+        @Ignore
+        Title(Parcel in) {
+            labelTitle = in.readString();
+        }
 
         @Ignore
         @SuppressWarnings("unused")
@@ -125,15 +136,6 @@ public class Entry implements Parcelable {
                 return new Title[size];
             }
         };
-        private String labelTitle;
-
-        public Title() {
-        }
-
-        @Ignore
-        Title(Parcel in) {
-            labelTitle = in.readString();
-        }
 
         public String getLabelTitle() {
             return labelTitle;
@@ -154,52 +156,7 @@ public class Entry implements Parcelable {
         }
     }
 
-    public class PodcastImage implements Parcelable {
-
-        private String label;
-
-        @Ignore
-        @SuppressWarnings("unused")
-        public final Parcelable.Creator<PodcastImage> CREATOR = new Parcelable.Creator<PodcastImage>() {
-            @Override
-            public PodcastImage createFromParcel(Parcel in) {
-                return new PodcastImage(in);
-            }
-
-            @Override
-            public PodcastImage[] newArray(int size) {
-                return new PodcastImage[size];
-            }
-        };
-
-        public String getLabel() {
-            return label;
-        }
-
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
-        public PodcastImage() {
-        }
-
-        @Ignore
-        PodcastImage(Parcel in) {
-            label = in.readString();
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(label);
-        }
-    }
-
-    public class Summary implements Parcelable {
+    public static class Summary implements Parcelable {
 
         private String label;
 
@@ -244,7 +201,7 @@ public class Entry implements Parcelable {
         }
     }
 
-    public class FeedID implements Parcelable {
+    public static class FeedID implements Parcelable {
 
         @Ignore
         @SuppressWarnings("unused")
@@ -290,7 +247,7 @@ public class Entry implements Parcelable {
         }
     }
 
-    public class Attributes implements Parcelable {
+    public static class Attributes implements Parcelable {
 
         @Ignore
         @SuppressWarnings("unused")
@@ -333,6 +290,51 @@ public class Entry implements Parcelable {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(id);
+        }
+    }
+
+    public class PodcastImage implements Parcelable {
+
+        private String label;
+
+        public PodcastImage() {
+        }
+
+        @Ignore
+        @SuppressWarnings("unused")
+        public final Parcelable.Creator<PodcastImage> CREATOR = new Parcelable.Creator<PodcastImage>() {
+            @Override
+            public PodcastImage createFromParcel(Parcel in) {
+                return new PodcastImage(in);
+            }
+
+            @Override
+            public PodcastImage[] newArray(int size) {
+                return new PodcastImage[size];
+            }
+        };
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        @Ignore
+        PodcastImage(Parcel in) {
+            label = in.readString();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(label);
         }
     }
 }

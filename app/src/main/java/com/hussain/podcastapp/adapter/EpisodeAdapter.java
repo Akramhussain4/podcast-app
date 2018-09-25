@@ -41,8 +41,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
 
     @Override
     public void onBindViewHolder(@NonNull EpisodeViewHolder episodeViewHolder, int i) {
-        int position = i;
-        final Item item = mItemList.get(position);
+        final Item item = mItemList.get(i);
         episodeViewHolder.mTitle.setText(item.getTitle());
         episodeViewHolder.mSummary.setText(item.getSummary());
         episodeViewHolder.mDuration.setText(item.getDuration());
@@ -54,7 +53,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
                 .into(episodeViewHolder.mThumb);
         episodeViewHolder.itemView.setOnClickListener(view -> {
             if (mClickListener != null) {
-                mClickListener.onEpisodeClick(item, position, episodeViewHolder.mThumb);
+                mClickListener.onEpisodeClick(item, i, episodeViewHolder.mThumb);
             }
         });
     }

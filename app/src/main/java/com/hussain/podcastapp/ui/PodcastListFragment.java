@@ -1,24 +1,24 @@
 package com.hussain.podcastapp.ui;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.PodcastAdapter;
 import com.hussain.podcastapp.base.IBaseView;
 import com.hussain.podcastapp.customview.CustomBottomSheet;
+import com.hussain.podcastapp.customview.GridAutofitLayoutManager;
 import com.hussain.podcastapp.database.ApiInterface;
 import com.hussain.podcastapp.database.AppDatabase;
 import com.hussain.podcastapp.model.ApiResponse;
@@ -55,6 +55,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     private MainActivity mActivityContext;
     private BottomSheetDialog mBottomDialog;
     private boolean isClicked = true;
+    private boolean mSubscribed = false;
 
     private AppDatabase mDb;
 
@@ -73,7 +74,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_podcasts_list, container, false);
         ButterKnife.bind(this, view);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), getSpan()));
+        mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(getContext(), 400));
         mContext = this;
         return view;
     }
@@ -128,13 +129,6 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         });
     }
 
-    private int getSpan() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            return 4;
-        }
-        return 2;
-    }
-
     @Override
     public void onPodcastClick(Entry item, int position) {
         if (isClicked) {
@@ -159,7 +153,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
                 LookUpResponse data = response.body();
                 if (data != null) {
                     mResults = data.getResults().get(0);
-                    openBottomDialog(item, mResults);
+                    checkIfSubscribed(item, mResults);
                 }
             }
 
@@ -170,62 +164,54 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         });
     }
 
-    private void openBottomDialog(Entry item, LookUpResponse.Results results) {
+    private void checkIfSubscribed(Entry item, LookUpResponse.Results mResults) {
         String feedId = item.getFeedId().getAttributes().getId();
-        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                Entry entry = mDb.entryDao().getPodcast(feedId);
-                if (entry != null) {
-                    mActivityContext.runOnUiThread((new Runnable() {
-                        @Override
-                        public void run() {
-                            subscribedPodcast(item, results);
-                        }
-                    }));
-
-                } else {
-                    mActivityContext.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            unSubscribedPodcast(item, results);
-                        }
-                    });
-                }
+        AppExecutors.getInstance().getDiskIO().execute(() -> {
+            Entry entry = mDb.entryDao().getPodcast(feedId);
+            if (entry != null) {
+                mSubscribed = true;
+                mActivityContext.runOnUiThread(() -> bottomDialog(item, mResults, true));
+            } else {
+                mActivityContext.runOnUiThread(() -> bottomDialog(item, mResults, false));
             }
         });
     }
 
-    private void subscribedPodcast(Entry item, LookUpResponse.Results results) {
+    private void bottomDialog(Entry item, LookUpResponse.Results results, boolean sub) {
         mBottomDialog = CustomBottomSheet.showBottomDialog(getActivity(), item, results.getArtWork(), view -> {
             Intent intent = new Intent(getContext(), EpisodesActivity.class);
             intent.putExtra(AppConstants.FEED_URL_KEY, mResults.getFeedUrl());
             intent.putExtra(AppConstants.ARTWORK_URL, mResults.getArtWork());
             showBottomDialog(false);
             startActivity(intent);
-        }, view -> AppExecutors.getInstance().getDiskIO().execute(() -> {
-            mDb.entryDao().insertPodcast(item);
-
-        }), true);
+        }, view -> {
+            if (mSubscribed) {
+                handleDelete(item, view);
+            } else {
+                handleInsert(item, view);
+            }
+        }, sub);
         showBottomDialog(true);
         isClicked = true;
         showAnimation(false);
     }
 
-    private void unSubscribedPodcast(Entry item, LookUpResponse.Results results) {
-        mBottomDialog = CustomBottomSheet.showBottomDialog(getActivity(), item, results.getArtWork(), view -> {
-            Intent intent = new Intent(getContext(), EpisodesActivity.class);
-            intent.putExtra(AppConstants.FEED_URL_KEY, mResults.getFeedUrl());
-            intent.putExtra(AppConstants.ARTWORK_URL, mResults.getArtWork());
-            showBottomDialog(false);
-            startActivity(intent);
-        }, view -> AppExecutors.getInstance().getDiskIO().execute(() -> {
-            mDb.entryDao().insertPodcast(item);
-        }), false);
-        showBottomDialog(true);
-        isClicked = true;
-        showAnimation(false);
+    private void handleDelete(Entry item, View view) {
+        Button btSub = view.findViewById(R.id.btSubscribe);
+        btSub.setText(R.string.subscribe);
+        mSubscribed = false;
+        AppExecutors.getInstance().getDiskIO().execute(() ->
+                mDb.entryDao().deletePodcast(item.getFeedId().getAttributes().getId()));
     }
+
+    private void handleInsert(Entry item, View view) {
+        Button btSub = view.findViewById(R.id.btSubscribe);
+        btSub.setText(R.string.unsubscribe);
+        mSubscribed = true;
+        AppExecutors.getInstance().getDiskIO().execute(() ->
+                mDb.entryDao().insertPodcast(item));
+    }
+
 
     private void showBottomDialog(boolean show) {
         if (mBottomDialog != null) {
@@ -235,6 +221,12 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
                 mBottomDialog.dismiss();
             }
         }
+    }
+
+    @Override
+    public void onStop() {
+        showBottomDialog(false);
+        super.onStop();
     }
 
     @Override

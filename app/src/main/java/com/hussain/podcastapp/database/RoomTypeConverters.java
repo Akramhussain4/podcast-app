@@ -27,7 +27,6 @@ public class RoomTypeConverters {
     @TypeConverter
     public static String someObjectListToString(List<Entry.PodcastImage> someObjects) {
         Gson gson = new Gson();
-        String json = gson.toJson(someObjects);
-        return json;
+        return gson.toJson(someObjects);
     }
 }

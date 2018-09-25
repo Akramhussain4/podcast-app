@@ -22,4 +22,7 @@
     <string name="label_pause">Pause</string>
     <string name="label_forward">Forward</string>
     <string name="label_backward">Backward</string>
+    <string name="no_subscriptions">You haven\'t subscribed to any podcast yet!</string>
+    <string name="unsubscribe">UNSUBSCRIBE</string>
+    <string name="subscribe">SUBSCRIBE</string>
 </resources>
