@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.customview.TransparentLoadAnimation;
 
@@ -19,6 +20,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
     private TransparentLoadAnimation loadAnimation;
     @BindView(R.id.toolbar)
     public Toolbar mToolbar;
+
+    public FirebaseUser mFirebaseUser;
 
     protected final void onCreate(Bundle savedInstanceState, int resourceLayout) {
         super.onCreate(savedInstanceState);

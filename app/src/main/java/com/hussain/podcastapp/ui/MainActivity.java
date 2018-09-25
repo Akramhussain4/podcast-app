@@ -11,11 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.PodcastPagerAdapter;
 import com.hussain.podcastapp.base.BaseActivity;
@@ -30,65 +27,25 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 
-import java.util.Arrays;
-import java.util.List;
-
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity {
 
-    private static final int RC_SIGN_IN = 123;
+
 
     @BindView(R.id.vp)
     ViewPager mViewPager;
     @BindView(R.id.nts)
     NavigationTabStrip mNavStrip;
 
-    private FirebaseUser user;
 
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         onCreate(savedInstanceState, R.layout.activity_main);
-        login();
+        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        setUI();
     }
-
-    private void login() {
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                new AuthUI.IdpConfig.EmailBuilder().build());
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .setLogo(R.drawable.ic_launcher_foreground)
-                        .setTheme(R.style.AppTheme)
-                        .build(),
-                RC_SIGN_IN);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                user = FirebaseAuth.getInstance().getCurrentUser();
-                setUI();
-                // ...
-            } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
-            }
-        }
-    }
-
 
     private void setUI() {
         PodcastPagerAdapter adapter = new PodcastPagerAdapter(getSupportFragmentManager());
@@ -99,7 +56,7 @@ public class MainActivity extends BaseActivity {
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                GlideApp.with(imageView.getContext()).load(user.getPhotoUrl()).placeholder(R.drawable.ic_launcher_foreground).into(imageView);
+                GlideApp.with(imageView.getContext()).load(mFirebaseUser.getPhotoUrl()).placeholder(R.drawable.ic_launcher_foreground).into(imageView);
             }
         });
         new DrawerBuilder().withActivity(this).build();
@@ -108,7 +65,7 @@ public class MainActivity extends BaseActivity {
                 .withSelectionListEnabledForSingleProfile(false)
                 .withHeaderBackground(R.color.colorPrimary)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(user.getDisplayName()).withEmail(user.getEmail()).withIcon(user.getPhotoUrl())
+                        new ProfileDrawerItem().withName(mFirebaseUser.getDisplayName()).withEmail(mFirebaseUser.getEmail()).withIcon(mFirebaseUser.getPhotoUrl())
                 )
                 .withOnAccountHeaderListener((view, profile, currentProfile) -> false)
                 .build();
@@ -117,11 +74,11 @@ public class MainActivity extends BaseActivity {
                 .withToolbar(mToolbar)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withIdentifier(1).withName("Home").withSelectable(false),
-                        new PrimaryDrawerItem().withIdentifier(2).withName("Subscriptions").withSelectable(false),
-                        new PrimaryDrawerItem().withIdentifier(3).withName("Offline Podcasts").withSelectable(false),
+                        new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home).withSelectable(false),
+                        new PrimaryDrawerItem().withIdentifier(2).withName("Subscriptions").withIcon(R.drawable.ic_heart_box).withSelectable(false),
+                        new PrimaryDrawerItem().withIdentifier(3).withName("Offline Podcasts").withIcon(R.drawable.ic_download).withSelectable(false),
                         new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withIdentifier(4).withName("About")
+                        new SecondaryDrawerItem().withIdentifier(4).withIcon(R.drawable.ic_info).withName("About").withSelectable(false)
                 )
                 .withOnDrawerItemClickListener((view, position, drawerItem) -> {
                     if (drawerItem != null) {
