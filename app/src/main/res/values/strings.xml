@@ -25,4 +25,6 @@
     <string name="no_subscriptions">You haven\'t subscribed to any podcast yet!</string>
     <string name="unsubscribe">UNSUBSCRIBE</string>
     <string name="subscribe">SUBSCRIBE</string>
+    <string name="user_error_text">Unfortunately Something went wrong :(</string>
+    <string name="share_text">Share this Podcast with...</string>
 </resources>

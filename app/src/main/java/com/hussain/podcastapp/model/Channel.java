@@ -2,7 +2,9 @@ package com.hussain.podcastapp.model;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Path;
 import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Text;
 
 import java.util.ArrayList;
 
@@ -14,6 +16,9 @@ public class Channel {
     private String title;
     @Element(name = "description")
     private String description;
+    @Path("link")
+    @Text(required = false)
+    private String shareLink;
 
     public String getTitle() {
         return title;
@@ -37,5 +42,13 @@ public class Channel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getShareLink() {
+        return shareLink;
+    }
+
+    public void setShareLink(String shareLink) {
+        this.shareLink = shareLink;
     }
 }

@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.util.Util;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.base.BaseActivity;
 import com.hussain.podcastapp.model.Item;
@@ -39,10 +38,11 @@ public class PlayerActivity extends BaseActivity {
     @BindView(R.id.ivThumbnail)
     ImageView mIvThumb;
     private SimpleExoPlayer player;
-    private String mURL, mTitle, mSummary, mImage;
+    private String mTitle, mSummary, mImage;
     private AudioPlayerService mService;
     private boolean mBound = false;
     private Intent intent;
+    private String shareableLink;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -50,6 +50,7 @@ public class PlayerActivity extends BaseActivity {
             AudioPlayerService.LocalBinder binder = (AudioPlayerService.LocalBinder) iBinder;
             mService = binder.getService();
             mBound = true;
+            initializePlayer();
         }
 
         @Override
@@ -65,7 +66,7 @@ public class PlayerActivity extends BaseActivity {
         Bundle b = getIntent().getBundleExtra(AppConstants.BUNDLE_KEY);
         if (b != null) {
             Item item = b.getParcelable(AppConstants.ITEM_KEY);
-            mURL = item.getUrl();
+            shareableLink = b.getString(AppConstants.SHARE_KEY);
             mImage = item.getImage();
             mTitle = item.getTitle();
             mSummary = item.getSummary();
@@ -73,13 +74,12 @@ public class PlayerActivity extends BaseActivity {
             Bundle serviceBundle = new Bundle();
             serviceBundle.putParcelable(AppConstants.ITEM_KEY, item);
             intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
-            Util.startForegroundService(this, intent);
-
+            startService(intent);
         }
     }
 
     private void initializePlayer() {
-        if (player == null && !mURL.isEmpty() && mBound) {
+        if (mBound) {
             player = mService.getplayerInstance();
             mPlayerView.setPlayer(player);
             mPlayerView.setControllerHideOnTouch(false);
@@ -91,7 +91,6 @@ public class PlayerActivity extends BaseActivity {
     public void onStart() {
         super.onStart();
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        initializePlayer();
         setUI();
     }
 
@@ -109,7 +108,6 @@ public class PlayerActivity extends BaseActivity {
     protected void onStop() {
         unbindService(mConnection);
         mBound = false;
-        releasePlayer();
         super.onStop();
     }
 
@@ -124,7 +122,12 @@ public class PlayerActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.share_podcast:
-                //Logic for Share
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, mTitle);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, mTitle + "\n\n" + shareableLink);
+                shareIntent.setType("text/plain");
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_text)));
                 return true;
             case R.id.download_podcast:
                 //Logic for download
@@ -134,13 +137,6 @@ public class PlayerActivity extends BaseActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void releasePlayer() {
-        if (player != null) {
-            player.release();
-            player = null;
         }
     }
 

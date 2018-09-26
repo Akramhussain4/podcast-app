@@ -20,11 +20,14 @@ import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.model.Item;
 import com.hussain.podcastapp.ui.PlayerActivity;
 import com.hussain.podcastapp.utils.AppConstants;
+import com.hussain.podcastapp.utils.DownloadUtil;
 
 public class AudioPlayerService extends Service {
 
@@ -40,10 +43,16 @@ public class AudioPlayerService extends Service {
 
     @Override
     public void onDestroy() {
-        playerNotificationManager.setPlayer(null);
-        player.release();
-        player = null;
+        releasePlayer();
         super.onDestroy();
+    }
+
+    private void releasePlayer() {
+        if (player != null) {
+            playerNotificationManager.setPlayer(null);
+            player.release();
+            player = null;
+        }
     }
 
     @Nullable
@@ -59,6 +68,7 @@ public class AudioPlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //releasePlayer();
         Bundle b = intent.getBundleExtra(AppConstants.BUNDLE_KEY);
         if (b != null) {
             item = b.getParcelable(AppConstants.ITEM_KEY);
@@ -73,7 +83,11 @@ public class AudioPlayerService extends Service {
         player = ExoPlayerFactory.newSimpleInstance(context, new DefaultTrackSelector());
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
                 Util.getUserAgent(context, getString(R.string.app_name)));
-        MediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+        CacheDataSourceFactory cacheDataSourceFactory = new CacheDataSourceFactory(
+                DownloadUtil.getCache(context),
+                dataSourceFactory,
+                CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+        MediaSource mediaSource = new ExtractorMediaSource.Factory(cacheDataSourceFactory)
                 .createMediaSource(uri);
         player.prepare(mediaSource);
         player.setPlayWhenReady(true);
@@ -105,7 +119,7 @@ public class AudioPlayerService extends Service {
                     @Nullable
                     @Override
                     public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-                        return item.getBitmap();
+                        return null;
                     }
                 }
         );

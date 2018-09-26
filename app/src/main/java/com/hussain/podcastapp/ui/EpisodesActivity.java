@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hussain.podcastapp.R;
@@ -130,6 +131,8 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
             @Override
             public void onFailure(@NonNull Call<RssFeed> call, @NonNull Throwable t) {
                 Log.d(TAG, t.getMessage());
+                Toast.makeText(getApplicationContext(), R.string.user_error_text, Toast.LENGTH_LONG).show();
+                finish();
             }
         });
     }
@@ -139,6 +142,7 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
         Intent intent = new Intent(this, PlayerActivity.class);
         Bundle dataBundle = new Bundle();
         dataBundle.putParcelable(AppConstants.ITEM_KEY, item);
+        dataBundle.putString(AppConstants.SHARE_KEY, mChannel.getShareLink());
         intent.putExtra(AppConstants.BUNDLE_KEY, dataBundle);
         Bundle transitionBundle = ActivityOptions.makeSceneTransitionAnimation(this, view, view.getTransitionName()).toBundle();
         startActivity(intent, transitionBundle);
