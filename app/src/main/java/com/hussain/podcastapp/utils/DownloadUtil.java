@@ -16,6 +16,7 @@
 package com.hussain.podcastapp.utils;
 
 import android.content.Context;
+import android.os.Environment;
 
 import com.google.android.exoplayer2.offline.DownloadManager;
 import com.google.android.exoplayer2.offline.ProgressiveDownloadAction;
@@ -35,7 +36,7 @@ public class DownloadUtil {
 
     public static synchronized Cache getCache(Context context) {
         if (cache == null) {
-            File cacheDirectory = new File(context.getExternalFilesDir(null), "downloads");
+            File cacheDirectory = new File(context.getExternalFilesDir(Environment.DIRECTORY_MUSIC), "downloads");
             cache = new SimpleCache(cacheDirectory, new NoOpCacheEvictor());
         }
         return cache;
