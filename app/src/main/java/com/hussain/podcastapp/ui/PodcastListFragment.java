@@ -74,7 +74,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_podcasts_list, container, false);
         ButterKnife.bind(this, view);
-        mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(getContext(), 400));
+        mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(getContext(), 300));
         mContext = this;
         return view;
     }

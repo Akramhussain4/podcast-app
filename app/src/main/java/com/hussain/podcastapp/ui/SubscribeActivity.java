@@ -53,7 +53,7 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     protected void onCreate(Bundle savedInstanceState) {
         onCreate(savedInstanceState, R.layout.activity_subscribe);
         mDb = AppDatabase.getInstance(this);
-        mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(this, 400));
+        mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(this, 300));
     }
 
     @Override

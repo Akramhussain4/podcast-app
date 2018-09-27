@@ -62,6 +62,9 @@ public class AudioPlayerService extends Service {
     }
 
     public SimpleExoPlayer getplayerInstance() {
+        if (player == null) {
+            startPlayer();
+        }
         return player;
     }
 
