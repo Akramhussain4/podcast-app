@@ -20,4 +20,3 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keepclassmembers class com.hussain.podcastapp.model.** { *; }
--keep,includedescriptorclasses class com.google.firebase.** { *; }

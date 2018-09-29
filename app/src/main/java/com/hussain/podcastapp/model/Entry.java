@@ -20,19 +20,29 @@ import java.util.Map;
 @Entity(tableName = "entry")
 public class Entry implements Parcelable {
 
+    @Exclude
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Entry> CREATOR = new Parcelable.Creator<Entry>() {
+        @Override
+        public Entry createFromParcel(Parcel in) {
+            return new Entry(in);
+        }
+
+        @Override
+        public Entry[] newArray(int size) {
+            return new Entry[size];
+        }
+    };
     @NonNull
     @PrimaryKey
     @Embedded
     @SerializedName("id")
-    private FeedID feedId;
+    public FeedID feedId;
     @Embedded
     @SerializedName("title")
-    private Title EntryTitle;
+    public Title EntryTitle;
     @SerializedName("im:image")
-    private List<PodcastImage> image;
-    @Embedded
-    @SerializedName("summary")
-    private Summary summary;
+    public List<PodcastImage> image;
 
     public Entry() {
     }
@@ -52,6 +62,7 @@ public class Entry implements Parcelable {
     public void setEntryTitle(Title entryTitle) {
         this.EntryTitle = entryTitle;
     }
+
 
     @Ignore
     protected Entry(Parcel in) {
@@ -78,18 +89,9 @@ public class Entry implements Parcelable {
         this.summary = summary;
     }
 
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Entry> CREATOR = new Parcelable.Creator<Entry>() {
-        @Override
-        public Entry createFromParcel(Parcel in) {
-            return new Entry(in);
-        }
-
-        @Override
-        public Entry[] newArray(int size) {
-            return new Entry[size];
-        }
-    };
+    @Embedded
+    @SerializedName("summary")
+    public Summary summary;
 
     public void setImage(List<PodcastImage> image) {
         this.image = image;
@@ -125,17 +127,7 @@ public class Entry implements Parcelable {
 
     public static class Title implements Parcelable {
 
-        @SerializedName("label")
-        private String labelTitle;
-
-        public Title() {
-        }
-
-        @Ignore
-        Title(Parcel in) {
-            labelTitle = in.readString();
-        }
-
+        @Exclude
         @Ignore
         @SuppressWarnings("unused")
         public final Parcelable.Creator<Title> CREATOR = new Parcelable.Creator<Title>() {
@@ -149,6 +141,17 @@ public class Entry implements Parcelable {
                 return new Title[size];
             }
         };
+
+        public Title() {
+        }
+
+        @Ignore
+        Title(Parcel in) {
+            labelTitle = in.readString();
+        }
+
+        @SerializedName("label")
+        public String labelTitle;
 
         public String getLabelTitle() {
             return labelTitle;
@@ -171,8 +174,7 @@ public class Entry implements Parcelable {
 
     public static class Summary implements Parcelable {
 
-        private String label;
-
+        @Exclude
         @Ignore
         @SuppressWarnings("unused")
         public final Parcelable.Creator<Summary> CREATOR = new Parcelable.Creator<Summary>() {
@@ -186,6 +188,7 @@ public class Entry implements Parcelable {
                 return new Summary[size];
             }
         };
+        public String label;
 
         public String getLabel() {
             return label;
@@ -199,7 +202,7 @@ public class Entry implements Parcelable {
         }
 
         @Ignore
-        Summary(Parcel in) {
+        protected Summary(Parcel in) {
             label = in.readString();
         }
 
@@ -216,6 +219,7 @@ public class Entry implements Parcelable {
 
     public static class FeedID implements Parcelable {
 
+        @Exclude
         @Ignore
         @SuppressWarnings("unused")
         public final Parcelable.Creator<FeedID> CREATOR = new Parcelable.Creator<FeedID>() {
@@ -231,7 +235,7 @@ public class Entry implements Parcelable {
         };
         @Embedded
         @NonNull
-        private Attributes attributes;
+        public Attributes attributes;
 
         public Attributes getAttributes() {
             return attributes;
@@ -262,6 +266,7 @@ public class Entry implements Parcelable {
 
     public static class Attributes implements Parcelable {
 
+        @Exclude
         @Ignore
         @SuppressWarnings("unused")
         public final Parcelable.Creator<Attributes> CREATOR = new Parcelable.Creator<Attributes>() {
@@ -277,7 +282,7 @@ public class Entry implements Parcelable {
         };
         @NonNull
         @SerializedName("im:id")
-        private String id;
+        public String id;
 
         public Attributes() {
         }
@@ -308,11 +313,7 @@ public class Entry implements Parcelable {
 
     public class PodcastImage implements Parcelable {
 
-        private String label;
-
-        public PodcastImage() {
-        }
-
+        @Exclude
         @Ignore
         @SuppressWarnings("unused")
         public final Parcelable.Creator<PodcastImage> CREATOR = new Parcelable.Creator<PodcastImage>() {
@@ -326,6 +327,11 @@ public class Entry implements Parcelable {
                 return new PodcastImage[size];
             }
         };
+
+        public PodcastImage() {
+        }
+
+        public String label;
 
         public String getLabel() {
             return label;

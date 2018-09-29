@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hussain.podcastapp.R;
@@ -31,7 +29,6 @@ import com.hussain.podcastapp.model.LookUpResponse;
 import com.hussain.podcastapp.utils.AppConstants;
 import com.hussain.podcastapp.utils.AppExecutors;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -209,6 +206,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         mSubscribed = false;
         AppExecutors.getInstance().getDiskIO().execute(() ->
                 mDb.entryDao().deletePodcast(item.getFeedId().getAttributes().getId()));
+        mDatabase.child(item.getFeedId().getAttributes().getId()).removeValue();
     }
 
     private void handleInsert(Entry item, View view) {
@@ -217,20 +215,8 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         mSubscribed = true;
         AppExecutors.getInstance().getDiskIO().execute(() ->
                 mDb.entryDao().insertPodcast(item));
-        String uid = "";
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            uid = user.getUid();
-        }
-        //  DatabaseReference ref = mDatabase.child("users").child(uid).child("account");
-        String key = mDatabase.push().getKey();
-        // Post post = new Post(userId, username, title, body);
         Map<String, Object> postValues = item.toMap();
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/posts/", postValues);
-        mDatabase.updateChildren(postValues);
-
+        mDatabase.child(item.getFeedId().attributes.id).setValue(postValues);
     }
 
 
