@@ -14,6 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.PodcastAdapter;
 import com.hussain.podcastapp.base.IBaseView;
@@ -27,7 +31,9 @@ import com.hussain.podcastapp.model.LookUpResponse;
 import com.hussain.podcastapp.utils.AppConstants;
 import com.hussain.podcastapp.utils.AppExecutors;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,7 +62,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     private BottomSheetDialog mBottomDialog;
     private boolean isClicked = true;
     private boolean mSubscribed = false;
-
+    private DatabaseReference mDatabase;
     private AppDatabase mDb;
 
     @Override
@@ -67,6 +73,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
             mCategory = b.getString(AppConstants.CATEGORY_KEY);
         }
         mDb = AppDatabase.getInstance(getContext());
+        mDatabase = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -210,6 +217,20 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         mSubscribed = true;
         AppExecutors.getInstance().getDiskIO().execute(() ->
                 mDb.entryDao().insertPodcast(item));
+        String uid = "";
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            uid = user.getUid();
+        }
+        //  DatabaseReference ref = mDatabase.child("users").child(uid).child("account");
+        String key = mDatabase.push().getKey();
+        // Post post = new Post(userId, username, title, body);
+        Map<String, Object> postValues = item.toMap();
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/posts/", postValues);
+        mDatabase.updateChildren(postValues);
+
     }
 
 

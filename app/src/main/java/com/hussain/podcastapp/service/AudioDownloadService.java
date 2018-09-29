@@ -21,8 +21,11 @@ import android.support.annotation.Nullable;
 import com.google.android.exoplayer2.offline.DownloadManager;
 import com.google.android.exoplayer2.offline.DownloadManager.TaskState;
 import com.google.android.exoplayer2.offline.DownloadService;
+import com.google.android.exoplayer2.scheduler.PlatformScheduler;
 import com.google.android.exoplayer2.scheduler.Scheduler;
 import com.google.android.exoplayer2.ui.DownloadNotificationUtil;
+import com.google.android.exoplayer2.util.NotificationUtil;
+import com.google.android.exoplayer2.util.Util;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.utils.DownloadUtil;
 
@@ -30,6 +33,9 @@ import static com.hussain.podcastapp.utils.AppConstants.DOWNLOAD_CHANNEL_ID;
 import static com.hussain.podcastapp.utils.AppConstants.DOWNLOAD_NOTIFICATION_ID;
 
 public class AudioDownloadService extends DownloadService {
+
+    private static final int JOB_ID = 1;
+    private static final int FOREGROUND_NOTIFICATION_ID = 1;
 
     public AudioDownloadService() {
         super(
@@ -47,7 +53,7 @@ public class AudioDownloadService extends DownloadService {
     @Nullable
     @Override
     protected Scheduler getScheduler() {
-        return null;
+        return new PlatformScheduler(this, JOB_ID);
     }
 
     @Override
@@ -59,6 +65,33 @@ public class AudioDownloadService extends DownloadService {
                 null,
                 null,
                 taskStates);
+    }
+
+    @Override
+    protected void onTaskStateChanged(TaskState taskState) {
+        if (taskState.action.isRemoveAction) {
+            return;
+        }
+        Notification notification = null;
+        if (taskState.state == TaskState.STATE_COMPLETED) {
+            notification =
+                    DownloadNotificationUtil.buildDownloadCompletedNotification(
+                            /* context= */ this,
+                            R.drawable.exo_controls_play,
+                            DOWNLOAD_CHANNEL_ID,
+                            /* contentIntent= */ null,
+                            Util.fromUtf8Bytes(taskState.action.data));
+        } else if (taskState.state == TaskState.STATE_FAILED) {
+            notification =
+                    DownloadNotificationUtil.buildDownloadFailedNotification(
+                            /* context= */ this,
+                            R.drawable.exo_controls_play,
+                            DOWNLOAD_CHANNEL_ID,
+                            /* contentIntent= */ null,
+                            Util.fromUtf8Bytes(taskState.action.data));
+        }
+        int notificationId = FOREGROUND_NOTIFICATION_ID + 1 + taskState.taskId;
+        NotificationUtil.setNotification(this, notificationId, notification);
     }
 
 }

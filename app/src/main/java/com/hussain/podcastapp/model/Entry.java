@@ -8,10 +8,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.Exclude;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Entity(tableName = "entry")
@@ -95,6 +98,16 @@ public class Entry implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("feedId", feedId);
+        result.put("Title", EntryTitle);
+        result.put("image", image);
+        result.put("summary", summary);
+        return result;
     }
 
     @Override

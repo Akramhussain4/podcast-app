@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "419405426689-21q2s037knhg5o87lvd96ks7qqrt84co.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hussain.podcastapp",
+            "certificate_hash": "580bc793c062c50d4e0b2637170ec215ae7d1560"
+          }
+        },
+        {
+          "client_id": "419405426689-qkm9acsg4ff0c3sqeovtb33vbbbl3ufc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hussain.podcastapp",
+            "certificate_hash": "f8ae35c8cecfc0bba2cb44392e09674b829fce15"
+          }
+        },
+        {
           "client_id": "419405426689-bbgp82ckeif0g6be4nbotocc5gg5k6eu.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +45,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "419405426689-bbgp82ckeif0g6be4nbotocc5gg5k6eu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
