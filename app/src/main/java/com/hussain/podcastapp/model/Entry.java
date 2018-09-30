@@ -43,6 +43,9 @@ public class Entry implements Parcelable {
     public Title EntryTitle;
     @SerializedName("im:image")
     public List<PodcastImage> image;
+    @Embedded
+    @SerializedName("summary")
+    public Summary summary;
 
     public Entry() {
     }
@@ -55,26 +58,27 @@ public class Entry implements Parcelable {
         this.feedId = feedId;
     }
 
-    public Title getEntryTitle() {
-        return EntryTitle;
-    }
-
-    public void setEntryTitle(Title entryTitle) {
-        this.EntryTitle = entryTitle;
-    }
-
-
     @Ignore
     protected Entry(Parcel in) {
         feedId = (FeedID) in.readValue(FeedID.class.getClassLoader());
         EntryTitle = (Title) in.readValue(Title.class.getClassLoader());
         if (in.readByte() == 0x01) {
-            image = new ArrayList<PodcastImage>();
+            image = new ArrayList<>();
             in.readList(image, PodcastImage.class.getClassLoader());
         } else {
             image = null;
         }
         summary = (Summary) in.readValue(Summary.class.getClassLoader());
+    }
+
+    @Exclude
+    public Title getEntryTitle() {
+        return EntryTitle;
+    }
+
+    @Exclude
+    public void setEntryTitle(Title entryTitle) {
+        this.EntryTitle = entryTitle;
     }
 
     public List<PodcastImage> getImage() {
@@ -88,10 +92,6 @@ public class Entry implements Parcelable {
     public void setSummary(Summary summary) {
         this.summary = summary;
     }
-
-    @Embedded
-    @SerializedName("summary")
-    public Summary summary;
 
     public void setImage(List<PodcastImage> image) {
         this.image = image;
@@ -308,52 +308,6 @@ public class Entry implements Parcelable {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(id);
-        }
-    }
-
-    public class PodcastImage implements Parcelable {
-
-        @Exclude
-        @Ignore
-        @SuppressWarnings("unused")
-        public final Parcelable.Creator<PodcastImage> CREATOR = new Parcelable.Creator<PodcastImage>() {
-            @Override
-            public PodcastImage createFromParcel(Parcel in) {
-                return new PodcastImage(in);
-            }
-
-            @Override
-            public PodcastImage[] newArray(int size) {
-                return new PodcastImage[size];
-            }
-        };
-
-        public PodcastImage() {
-        }
-
-        public String label;
-
-        public String getLabel() {
-            return label;
-        }
-
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
-        @Ignore
-        PodcastImage(Parcel in) {
-            label = in.readString();
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(label);
         }
     }
 }

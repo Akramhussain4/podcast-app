@@ -2,6 +2,7 @@ package com.hussain.podcastapp.database;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.hussain.podcastapp.model.Entry;
@@ -16,6 +17,9 @@ public interface EntryDao {
 
     @Insert
     void insertPodcast(Entry movies);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertPodcastList(List<Entry> movies);
 
     @Query("SELECT * FROM entry WHERE id = :id")
     Entry getPodcast(String id);

@@ -76,7 +76,9 @@ public class AudioPlayerService extends Service {
         if (b != null) {
             item = b.getParcelable(AppConstants.ITEM_KEY);
         }
-        startPlayer();
+        if (player == null) {
+            startPlayer();
+        }
         return START_STICKY;
     }
 

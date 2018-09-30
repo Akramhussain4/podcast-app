@@ -12,6 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.PodcastAdapter;
 import com.hussain.podcastapp.base.BaseActivity;
@@ -23,6 +28,7 @@ import com.hussain.podcastapp.model.LookUpResponse;
 import com.hussain.podcastapp.utils.AppConstants;
 import com.hussain.podcastapp.utils.AppExecutors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,21 +51,50 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     TextView mTvError;
 
     private List<Entry> mEntryData;
+    private List<Entry> mFirebaseData;
     private LookUpResponse.Results mResults;
     private AppDatabase mDb;
+    private DatabaseReference mDatabase;
 
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         onCreate(savedInstanceState, R.layout.activity_subscribe);
         mDb = AppDatabase.getInstance(this);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mFirebaseData = new ArrayList<>();
         mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(this, 300));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        setUI();
+        networkCall();
+    }
+
+    private void networkCall() {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    mFirebaseData.add(postSnapshot.getValue(Entry.class));
+                }
+                insertData();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
+
+    private void insertData() {
+        if (mFirebaseData != null && mFirebaseData.size() > 0) {
+            AppExecutors.getInstance().getDiskIO().execute(() ->
+                    mDb.entryDao().insertPodcastList(mFirebaseData));
+            setUI();
+        }
     }
 
     private void setUI() {
