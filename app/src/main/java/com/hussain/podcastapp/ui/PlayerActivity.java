@@ -20,6 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.offline.ProgressiveDownloadAction;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.util.Util;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.base.BaseActivity;
 import com.hussain.podcastapp.model.Item;
@@ -40,12 +41,12 @@ public class PlayerActivity extends BaseActivity {
     TextView mTvSummary;
     @BindView(R.id.ivThumbnail)
     ImageView mIvThumb;
-    private SimpleExoPlayer player;
+
     private String mUrl, mTitle, mSummary, mImage;
     private AudioPlayerService mService;
-    private boolean mBound = false;
     private Intent intent;
     private String shareableLink;
+    private boolean mBound = false;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -78,16 +79,18 @@ public class PlayerActivity extends BaseActivity {
             Bundle serviceBundle = new Bundle();
             serviceBundle.putParcelable(AppConstants.ITEM_KEY, item);
             intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
-            startService(intent);
+            Util.startForegroundService(this, intent);
+            mPlayerView.setUseController(true);
+            mPlayerView.showController();
+            mPlayerView.setControllerAutoShow(true);
+            mPlayerView.setControllerHideOnTouch(false);
         }
     }
 
     private void initializePlayer() {
         if (mBound) {
-            player = mService.getplayerInstance();
+            SimpleExoPlayer player = mService.getplayerInstance();
             mPlayerView.setPlayer(player);
-            mPlayerView.setControllerHideOnTouch(false);
-            mPlayerView.setControllerShowTimeoutMs(10800000);
         }
     }
 
@@ -95,6 +98,7 @@ public class PlayerActivity extends BaseActivity {
     public void onStart() {
         super.onStart();
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        initializePlayer();
         setUI();
     }
 
