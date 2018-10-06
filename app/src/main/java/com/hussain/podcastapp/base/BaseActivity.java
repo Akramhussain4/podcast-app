@@ -17,6 +17,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 
     private static final String TAG = BaseActivity.class.getName();
 
+    public static final int MY_BACKGROUND_JOB = 0;
     private TransparentLoadAnimation loadAnimation;
     @BindView(R.id.toolbar)
     public Toolbar mToolbar;

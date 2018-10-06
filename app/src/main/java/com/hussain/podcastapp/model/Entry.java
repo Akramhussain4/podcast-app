@@ -280,6 +280,7 @@ public class Entry implements Parcelable {
                 return new Attributes[size];
             }
         };
+
         @NonNull
         @SerializedName("im:id")
         public String id;

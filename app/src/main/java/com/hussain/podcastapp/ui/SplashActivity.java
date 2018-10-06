@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -36,7 +37,7 @@ public class SplashActivity extends BaseActivity {
             } else {
                 login();
             }
-        }, 3000);
+        }, 2000);
     }
 
     private void login() {
@@ -66,7 +67,6 @@ public class SplashActivity extends BaseActivity {
 
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
-
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -75,13 +75,11 @@ public class SplashActivity extends BaseActivity {
                 editor.putBoolean("Registered", true);
                 editor.apply();
                 launchMainActivity();
-                // ...
             } else {
-
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
-                // ...
+                Toast.makeText(this, "Problem Signing In!!!", Toast.LENGTH_LONG).show();
             }
         }
     }

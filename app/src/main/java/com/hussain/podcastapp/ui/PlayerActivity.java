@@ -41,7 +41,6 @@ public class PlayerActivity extends BaseActivity {
     TextView mTvSummary;
     @BindView(R.id.ivThumbnail)
     ImageView mIvThumb;
-
     private String mUrl, mTitle, mSummary, mImage;
     private AudioPlayerService mService;
     private Intent intent;
@@ -139,8 +138,10 @@ public class PlayerActivity extends BaseActivity {
                 return true;
             case R.id.download_podcast:
                 Uri uri = Uri.parse(mUrl);
-                ProgressiveDownloadAction progressiveDownloadAction = new ProgressiveDownloadAction(uri, false, null, null);
-                AudioDownloadService.startWithAction(PlayerActivity.this, AudioDownloadService.class, progressiveDownloadAction, false);
+                ProgressiveDownloadAction progressiveDownloadAction
+                        = new ProgressiveDownloadAction(uri, false, null, null);
+                AudioDownloadService.startWithAction(PlayerActivity.this, AudioDownloadService.class,
+                        progressiveDownloadAction, false);
                 return true;
             case android.R.id.home:
                 onBackPressed();

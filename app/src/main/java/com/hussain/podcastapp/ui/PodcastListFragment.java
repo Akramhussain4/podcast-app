@@ -56,11 +56,11 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     private String mCategory;
     private LookUpResponse.Results mResults;
     private MainActivity mActivityContext;
+    private DatabaseReference mDatabase;
+    private AppDatabase mDb;
     private BottomSheetDialog mBottomDialog;
     private boolean isClicked = true;
     private boolean mSubscribed = false;
-    private DatabaseReference mDatabase;
-    private AppDatabase mDb;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

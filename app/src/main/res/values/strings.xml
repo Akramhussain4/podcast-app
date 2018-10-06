@@ -27,4 +27,7 @@
     <string name="subscribe">SUBSCRIBE</string>
     <string name="user_error_text">Unfortunately Something went wrong :(</string>
     <string name="share_text">Share this Podcast with...</string>
+    <string name="preference_file_key">com.hussain.podcastapp.currently_playing</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

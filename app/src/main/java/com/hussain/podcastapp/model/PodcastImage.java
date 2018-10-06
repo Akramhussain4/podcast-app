@@ -22,13 +22,15 @@ public class PodcastImage implements Parcelable {
             return new PodcastImage[size];
         }
     };
+
     public String label;
 
     public PodcastImage() {
     }
 
+
     @Ignore
-    public PodcastImage(Parcel in) {
+    private PodcastImage(Parcel in) {
         label = in.readString();
     }
 
