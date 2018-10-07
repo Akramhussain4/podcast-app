@@ -7,9 +7,6 @@ import android.widget.RemoteViews;
 
 import com.hussain.podcastapp.R;
 
-/**
- * Implementation of App Widget functionality.
- */
 public class PlayerWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,

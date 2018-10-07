@@ -32,13 +32,13 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_gravity="center"
-            android:layout_marginEnd="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
             android:layout_marginStart="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginRight="30dp"
             android:elevation="6dp"
             app:nts_active_color="@color/colorWhite"
-            app:nts_color="@color/colorBlack"
+            app:nts_color="@color/colorWhite"
             app:nts_corners_radius="3.5dp"
             app:nts_factor="0.8"
             app:nts_gravity="bottom"
@@ -47,7 +47,7 @@
             app:nts_titles="@array/titles"
             app:nts_type="point"
             app:nts_typeface="fonts/moon.otf"
-            app:nts_weight="8dp" />
+            app:nts_weight="6dp" />
 
     </FrameLayout>
 
@@ -59,4 +59,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+
 </android.support.constraint.ConstraintLayout>

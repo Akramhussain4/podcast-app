@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,20 +19,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.offline.ProgressiveDownloadAction;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.util.Util;
+import com.hussain.podcastapp.Application;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.base.BaseActivity;
 import com.hussain.podcastapp.model.Item;
-import com.hussain.podcastapp.service.AudioDownloadService;
 import com.hussain.podcastapp.service.AudioPlayerService;
+import com.hussain.podcastapp.service.DownloadTracker;
 import com.hussain.podcastapp.utils.AppConstants;
 import com.hussain.podcastapp.utils.GlideApp;
 
 import butterknife.BindView;
 
-public class PlayerActivity extends BaseActivity {
+public class PlayerActivity extends BaseActivity implements DownloadTracker.Listener {
 
     @BindView(R.id.video_view)
     PlayerView mPlayerView;
@@ -46,6 +47,7 @@ public class PlayerActivity extends BaseActivity {
     private Intent intent;
     private String shareableLink;
     private boolean mBound = false;
+    private DownloadTracker downloadTracker;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -84,6 +86,7 @@ public class PlayerActivity extends BaseActivity {
             mPlayerView.setControllerAutoShow(true);
             mPlayerView.setControllerHideOnTouch(false);
         }
+        downloadTracker = ((Application) getApplication()).getDownloadTracker();
     }
 
     private void initializePlayer() {
@@ -97,13 +100,14 @@ public class PlayerActivity extends BaseActivity {
     public void onStart() {
         super.onStart();
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        downloadTracker.addListener(this);
         initializePlayer();
         setUI();
     }
 
     private void setUI() {
         mTvTitle.setText(mTitle);
-        mTvSummary.setText(mSummary);
+        mTvSummary.setText(Html.fromHtml(mSummary));
         GlideApp.with(this)
                 .load(mImage)
                 .placeholder(R.color.colorPrimary)
@@ -114,6 +118,7 @@ public class PlayerActivity extends BaseActivity {
     @Override
     protected void onStop() {
         unbindService(mConnection);
+        downloadTracker.removeListener(this);
         mBound = false;
         super.onStop();
     }
@@ -138,10 +143,11 @@ public class PlayerActivity extends BaseActivity {
                 return true;
             case R.id.download_podcast:
                 Uri uri = Uri.parse(mUrl);
-                ProgressiveDownloadAction progressiveDownloadAction
-                        = new ProgressiveDownloadAction(uri, false, null, null);
-                AudioDownloadService.startWithAction(PlayerActivity.this, AudioDownloadService.class,
-                        progressiveDownloadAction, false);
+                downloadTracker.toggleDownload(this, mTitle, uri, ".mp3");
+//                ProgressiveDownloadAction progressiveDownloadAction
+//                        = new ProgressiveDownloadAction(uri, false, null, null);
+//                AudioDownloadService.startWithAction(PlayerActivity.this, AudioDownloadService.class,
+//                        progressiveDownloadAction, false);
                 return true;
             case android.R.id.home:
                 onBackPressed();
@@ -156,5 +162,9 @@ public class PlayerActivity extends BaseActivity {
         TextView tvHeader = toolbar.findViewById(R.id.tvClassName);
         tvHeader.setText(R.string.app_name);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
+    }
+
+    @Override
+    public void onDownloadsChanged() {
     }
 }

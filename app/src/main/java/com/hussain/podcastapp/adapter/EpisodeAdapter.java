@@ -3,6 +3,7 @@ package com.hussain.podcastapp.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +44,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
     public void onBindViewHolder(@NonNull EpisodeViewHolder episodeViewHolder, int i) {
         final Item item = mItemList.get(i);
         episodeViewHolder.mTitle.setText(item.getTitle());
-        episodeViewHolder.mSummary.setText(item.getSummary());
-        episodeViewHolder.mDuration.setText(item.getDuration());
+        episodeViewHolder.mSummary.setText(Html.fromHtml(item.getSummary()));
         GlideApp.with(mContext)
                 .load(item.getImage())
                 .centerCrop()
@@ -75,8 +75,6 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
         TextView mTitle;
         @BindView(R.id.tvSummary)
         TextView mSummary;
-        @BindView(R.id.tvDuration)
-        TextView mDuration;
 
         EpisodeViewHolder(@NonNull View itemView) {
             super(itemView);
