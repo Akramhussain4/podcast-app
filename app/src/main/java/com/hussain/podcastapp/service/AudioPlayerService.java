@@ -71,7 +71,7 @@ public class AudioPlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        //releasePlayer();
+        releasePlayer();
         Bundle b = intent.getBundleExtra(AppConstants.BUNDLE_KEY);
         if (b != null) {
             item = b.getParcelable(AppConstants.ITEM_KEY);

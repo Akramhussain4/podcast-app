@@ -52,7 +52,7 @@
             android:layout_marginBottom="32dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorWhite"
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
@@ -81,6 +81,7 @@
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/video_view"
         android:layout_width="0dp"
+        app:show_timeout="0"
         android:layout_height="wrap_content"
         android:layout_marginBottom="128dp"
         app:layout_constraintBottom_toBottomOf="parent"

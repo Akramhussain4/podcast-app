@@ -3,12 +3,9 @@
     package="com.hussain.podcastapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
-        android:name=".Application"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -28,7 +25,6 @@
             android:parentActivityName=".ui.MainActivity" />
 
         <service android:name=".service.AudioPlayerService" />
-        <service android:name=".service.AudioDownloadService" />
 
         <activity android:name=".ui.SplashActivity">
             <intent-filter>

@@ -28,7 +28,8 @@ public final class AppConstants {
 
     public static final String PLAYBACK_CHANNEL_ID = "playback_channel";
     public static final int PLAYBACK_NOTIFICATION_ID = 1;
-    public static final String MEDIA_SESSION_TAG = "podcast_play";
-    public static final String DOWNLOAD_CHANNEL_ID = "download_channel";
-    public static final int DOWNLOAD_NOTIFICATION_ID = 2;
+
+    public static final String ACTION_PLAY = "action-play";
+    public static final String ACTION_PAUSE = "action-pause";
+    public static final String ACTION_STOP = "action-stop";
 }

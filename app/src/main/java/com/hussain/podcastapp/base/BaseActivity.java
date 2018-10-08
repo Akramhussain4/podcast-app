@@ -17,7 +17,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 
     private static final String TAG = BaseActivity.class.getName();
 
-    public static final int MY_BACKGROUND_JOB = 0;
     private TransparentLoadAnimation loadAnimation;
     @BindView(R.id.toolbar)
     public Toolbar mToolbar;
@@ -39,8 +38,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
     protected void setUpToolBar() {
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
         }
         onToolBarSetUp(mToolbar, getSupportActionBar());
     }

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +55,7 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     private List<Entry> mFirebaseData;
     private LookUpResponse.Results mResults;
     private AppDatabase mDb;
+    private String mUserId;
     private DatabaseReference mDatabase;
 
     @SuppressLint("MissingSuperCall")
@@ -61,7 +63,8 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     protected void onCreate(Bundle savedInstanceState) {
         onCreate(savedInstanceState, R.layout.activity_subscribe);
         mDb = AppDatabase.getInstance(this);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mDatabase = FirebaseDatabase.getInstance().getReference().child(mUserId);
         mFirebaseData = new ArrayList<>();
         mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(this, 300));
     }
@@ -70,6 +73,7 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     protected void onStart() {
         super.onStart();
         networkCall();
+        showAnimation(true);
     }
 
     private void networkCall() {
@@ -90,10 +94,15 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     }
 
     private void insertData() {
+        showAnimation(false);
         if (mFirebaseData != null && mFirebaseData.size() > 0) {
             AppExecutors.getInstance().getDiskIO().execute(() ->
                     mDb.entryDao().insertPodcastList(mFirebaseData));
             setUI();
+        } else {
+            mRecyclerView.setVisibility(View.GONE);
+            mErrorLayout.setVisibility(View.VISIBLE);
+            mTvError.setText(R.string.no_subscriptions);
         }
     }
 
@@ -118,7 +127,7 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     @Override
     public void onToolBarSetUp(Toolbar toolbar, ActionBar actionBar) {
         TextView tvHeader = toolbar.findViewById(R.id.tvClassName);
-        tvHeader.setText(R.string.app_name);
+        tvHeader.setText(R.string.subscriptions);
     }
 
     @Override

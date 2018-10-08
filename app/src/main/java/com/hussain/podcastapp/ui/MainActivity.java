@@ -31,13 +31,10 @@ import butterknife.BindView;
 
 public class MainActivity extends BaseActivity {
 
-
-
     @BindView(R.id.vp)
     ViewPager mViewPager;
     @BindView(R.id.nts)
     NavigationTabStrip mNavStrip;
-
 
     @SuppressLint("MissingSuperCall")
     @Override
@@ -56,7 +53,7 @@ public class MainActivity extends BaseActivity {
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                GlideApp.with(imageView.getContext()).load(mFirebaseUser.getPhotoUrl()).placeholder(R.drawable.ic_launcher_foreground).into(imageView);
+                GlideApp.with(imageView.getContext()).load(mFirebaseUser.getPhotoUrl()).placeholder(R.color.colorAccent).into(imageView);
             }
         });
         new DrawerBuilder().withActivity(this).build();
@@ -76,7 +73,6 @@ public class MainActivity extends BaseActivity {
                 .addDrawerItems(
                         new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home).withSelectable(false),
                         new PrimaryDrawerItem().withIdentifier(2).withName("Subscriptions").withIcon(R.drawable.ic_heart_box).withSelectable(false),
-                        new PrimaryDrawerItem().withIdentifier(3).withName("Offline Podcasts").withIcon(R.drawable.ic_download).withSelectable(false),
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem().withIdentifier(4).withIcon(R.drawable.ic_info).withName("About").withSelectable(false)
                 )
@@ -95,6 +91,7 @@ public class MainActivity extends BaseActivity {
                 })
                 .build();
     }
+
 
     @Override
     public void onToolBarSetUp(Toolbar toolbar, ActionBar actionBar) {

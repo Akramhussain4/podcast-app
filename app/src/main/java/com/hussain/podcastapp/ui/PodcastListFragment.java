@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hussain.podcastapp.R;
@@ -53,14 +55,16 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
 
     private List<Entry> mEntryData;
     private PodcastListFragment mContext;
+    private PodcastAdapter mAdapter;
     private String mCategory;
     private LookUpResponse.Results mResults;
     private MainActivity mActivityContext;
     private DatabaseReference mDatabase;
-    private AppDatabase mDb;
     private BottomSheetDialog mBottomDialog;
+    private AppDatabase mDb;
     private boolean isClicked = true;
     private boolean mSubscribed = false;
+    private String mUserId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,10 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         }
         mDb = AppDatabase.getInstance(getContext());
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            mUserId = user.getUid();
+        }
     }
 
     @Override
@@ -96,7 +104,6 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         mActivityContext = (MainActivity) getActivity();
     }
 
-
     private void networkCall() {
         showAnimation(true);
         int cacheSize = 10 * 1024 * 1024; // 10 MB
@@ -121,8 +128,8 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
                 if (mData != null) {
                     mSwipeRefresh.setRefreshing(false);
                     mEntryData = mData.getFeed().getEntry();
-                    PodcastAdapter podcastAdapter = new PodcastAdapter(mEntryData, mContext);
-                    mRecyclerView.setAdapter(podcastAdapter);
+                    mAdapter = new PodcastAdapter(mEntryData, mContext);
+                    mRecyclerView.setAdapter(mAdapter);
                 }
             }
 
@@ -206,7 +213,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         mSubscribed = false;
         AppExecutors.getInstance().getDiskIO().execute(() ->
                 mDb.entryDao().deletePodcast(item.getFeedId().getAttributes().getId()));
-        mDatabase.child(item.getFeedId().getAttributes().getId()).removeValue();
+        mDatabase.child(mUserId).child(item.getFeedId().getAttributes().getId()).removeValue();
     }
 
     private void handleInsert(Entry item, View view) {
@@ -216,7 +223,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         AppExecutors.getInstance().getDiskIO().execute(() ->
                 mDb.entryDao().insertPodcast(item));
         Map<String, Object> postValues = item.toMap();
-        mDatabase.child(item.getFeedId().attributes.id).setValue(postValues);
+        mDatabase.child(mUserId).child(item.getFeedId().attributes.id).setValue(postValues);
     }
 
 

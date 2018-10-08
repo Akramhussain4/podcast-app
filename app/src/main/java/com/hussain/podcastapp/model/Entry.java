@@ -106,7 +106,7 @@ public class Entry implements Parcelable {
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("feedId", feedId);
-        result.put("Title", EntryTitle);
+        result.put("EntryTitle", EntryTitle);
         result.put("image", image);
         result.put("summary", summary);
         return result;
@@ -233,6 +233,7 @@ public class Entry implements Parcelable {
                 return new FeedID[size];
             }
         };
+
         @Embedded
         @NonNull
         public Attributes attributes;

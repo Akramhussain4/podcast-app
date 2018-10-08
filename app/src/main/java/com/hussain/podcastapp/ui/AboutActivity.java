@@ -24,7 +24,7 @@ public class AboutActivity extends BaseActivity {
     @Override
     public void onToolBarSetUp(Toolbar toolbar, ActionBar actionBar) {
         TextView tvHeader = toolbar.findViewById(R.id.tvClassName);
-        tvHeader.setText(R.string.app_name);
+        tvHeader.setText(R.string.about);
     }
 
     @OnClick(R.id.tvEmail)

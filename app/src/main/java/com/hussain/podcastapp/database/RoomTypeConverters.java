@@ -7,7 +7,6 @@ import com.google.gson.reflect.TypeToken;
 import com.hussain.podcastapp.model.PodcastImage;
 
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.List;
 
 public class RoomTypeConverters {
@@ -15,16 +14,19 @@ public class RoomTypeConverters {
     @TypeConverter
     public static List<PodcastImage> stringToSomeObjectList(String data) {
         if (data == null) {
-            return Collections.emptyList();
+            return (null);
         }
-        Type listType = new TypeToken<List<PodcastImage>>() {
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<PodcastImage>>() {
         }.getType();
-        return new Gson().fromJson(data, listType);
+        List<PodcastImage> productCategoriesList = gson.fromJson(data, type);
+        return productCategoriesList;
     }
 
     @TypeConverter
     public static String someObjectListToString(List<PodcastImage> someObjects) {
         Gson gson = new Gson();
-        return gson.toJson(someObjects);
+        String ob = gson.toJson(someObjects);
+        return ob;
     }
 }
