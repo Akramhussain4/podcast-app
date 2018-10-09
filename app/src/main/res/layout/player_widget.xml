@@ -1,46 +1,62 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
     android:layout_width="match_parent"
-    android:id="@+id/root_view"
     android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:background="#CC000000"
-    android:layoutDirection="ltr"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/dp_16"
-    tools:targetApi="28">
+    android:background="@color/colorPrimary"
+    android:orientation="horizontal">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="TED - radio hour"
-        android:textColor="@color/colorWhite"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <LinearLayout
+        android:id="@+id/widget_no_playing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingTop="4dp">
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:text="No media playing"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="@dimen/dp_8"
-            android:scaleType="fitXY"
-            android:src="@drawable/logo_transparent" />
+    <ImageView
+        android:id="@+id/widget_thumbnail"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginStart="@dimen/dp_16" />
 
-        <ImageButton
-            android:id="@id/exo_play"
-            style="@style/ExoMediaButton.Play" />
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_toStartOf="@id/widget_play"
+        android:layout_toEndOf="@id/widget_thumbnail"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp" />
 
-        <ImageButton
-            android:id="@id/exo_pause"
-            style="@style/ExoMediaButton.Pause" />
+    <ImageButton
+        android:id="@+id/widget_play"
+        style="@style/ExoMediaButton.Play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="@dimen/dp_32" />
 
-    </LinearLayout>
+    <ImageButton
+        android:id="@+id/widget_pause"
+        style="@style/ExoMediaButton.Pause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="@dimen/dp_32"
+        android:visibility="gone" />
 
-</LinearLayout>
+</RelativeLayout>

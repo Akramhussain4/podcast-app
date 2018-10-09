@@ -5,38 +5,84 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.RemoteViews;
 
+import com.bumptech.glide.request.target.AppWidgetTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.hussain.podcastapp.R;
+import com.hussain.podcastapp.model.Item;
 import com.hussain.podcastapp.service.AudioPlayerService;
 import com.hussain.podcastapp.ui.PlayerActivity;
 import com.hussain.podcastapp.utils.AppConstants;
+import com.hussain.podcastapp.utils.GlideApp;
 
 public class PlayerWidget extends AppWidgetProvider {
 
-    public static final String WIDGET_EPISODE_TITLE_INTENT_EXTRA = "widget-episode-title-intent-extra";
-    public static final String WIDGET_IS_PLAYING_INTENT_EXTRA = "widget-is-playing-intent-extra";
-    public static final String WIDGET_THUMBNAIL_URL_INTENT_EXTRA = "widget-thumbnail-url-intent-extra";
-    public static final String WIDGET_NO_EPISODE_PLAYING_INTENT_EXTRA = "widget-no-episode-playing-intent-extra";
+    public static final String WIDGET_PLAYING_EXTRA = "widget-is-playing";
+    public static final String WIDGET_NO_PLAYING_EXTRA = "widget-no-episode-playing";
 
-    public static final String PLAY_BUTTON_CLICKED_ACTION = "com.example.vidbregar.bluepodcast.PLAY_BUTTON_CLICKED_ACTION";
-    public static final String PAUSE_BUTTON_CLICKED_ACTION = "com.example.vidbregar.bluepodcast.PAUSE_BUTTON_CLICKED_ACTION";
-    private String episodeTitle;
-    private String thumbnailUrl;
+    public static final String PLAY_BUTTON_CLICKED_ACTION = "com.hussain.podcastapp.PLAY_BUTTON_CLICKED_ACTION";
+    public static final String PAUSE_BUTTON_CLICKED_ACTION = "com.hussain.podcastapp.PAUSE_BUTTON_CLICKED_ACTION";
+
+    private Item item;
+    private String mTitle;
+    private String mThumbnail;
     private boolean isPlaying;
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    private void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                 int appWidgetId) {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.player_widget);
         Intent intent = new Intent(context, PlayerActivity.class);
+        Bundle serviceBundle = new Bundle();
+        serviceBundle.putParcelable(AppConstants.ITEM_KEY, item);
+        intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
         PendingIntent playerPendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        views.setOnClickPendingIntent(R.id.root_view, playerPendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_root, playerPendingIntent);
         // Instruct the widget manager to update the widget
+        if (mTitle == null) {
+            views.setViewVisibility(R.id.podcast_title, View.GONE);
+            views.setViewVisibility(R.id.widget_play, View.GONE);
+            views.setViewVisibility(R.id.widget_pause, View.GONE);
+            views.setViewVisibility(R.id.widget_no_playing, View.VISIBLE);
+        } else {
+            views.setViewVisibility(R.id.widget_no_playing, View.GONE);
+            views.setViewVisibility(R.id.widget_title, View.VISIBLE);
+            views.setTextViewText(R.id.widget_title, mTitle);
+            views.setViewVisibility(R.id.widget_play, View.VISIBLE);
+            views.setViewVisibility(R.id.widget_pause, View.VISIBLE);
+            if (mThumbnail != null) {
+                AppWidgetTarget appWidgetTarget = new AppWidgetTarget(context, R.id.widget_thumbnail, views, appWidgetId) {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
+                        super.onResourceReady(resource, transition);
+                    }
+                };
+                GlideApp.with(context)
+                        .asBitmap()
+                        .load(mThumbnail)
+                        .into(appWidgetTarget);
+            }
+            if (isPlaying) {
+                views.setViewVisibility(R.id.widget_play, View.INVISIBLE);
+                views.setViewVisibility(R.id.widget_pause, View.VISIBLE);
+                views.setOnClickPendingIntent(R.id.widget_pause,
+                        getPendingIntent(context, PAUSE_BUTTON_CLICKED_ACTION));
+            } else {
+                views.setViewVisibility(R.id.widget_pause, View.INVISIBLE);
+                views.setViewVisibility(R.id.widget_play, View.VISIBLE);
+                views.setOnClickPendingIntent(R.id.widget_play,
+                        getPendingIntent(context, PLAY_BUTTON_CLICKED_ACTION));
+            }
+        }
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    private PendingIntent getPendingSelfIntent(Context context, String action) {
+    private PendingIntent getPendingIntent(Context context, String action) {
         Intent intent = new Intent(context, getClass());
         intent.setAction(action);
         return PendingIntent.getBroadcast(context, 0, intent, 0);
@@ -56,15 +102,18 @@ public class PlayerWidget extends AppWidgetProvider {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS);
 
-            if (intent.hasExtra(WIDGET_NO_EPISODE_PLAYING_INTENT_EXTRA)) {
-                this.episodeTitle = null;
+            if (intent.hasExtra(WIDGET_NO_PLAYING_EXTRA)) {
+                this.mTitle = null;
                 this.isPlaying = false;
-            } else if (intent.hasExtra(WIDGET_EPISODE_TITLE_INTENT_EXTRA) && intent.hasExtra(WIDGET_IS_PLAYING_INTENT_EXTRA)) {
-                this.episodeTitle = intent.getStringExtra(WIDGET_EPISODE_TITLE_INTENT_EXTRA);
-                this.thumbnailUrl = intent.getStringExtra(WIDGET_THUMBNAIL_URL_INTENT_EXTRA);
-                this.isPlaying = intent.getBooleanExtra(WIDGET_IS_PLAYING_INTENT_EXTRA, false);
+            } else if (intent.hasExtra(AppConstants.BUNDLE_KEY) && intent.hasExtra(WIDGET_PLAYING_EXTRA)) {
+                Bundle b = intent.getBundleExtra(AppConstants.BUNDLE_KEY);
+                if (b != null) {
+                    item = b.getParcelable(AppConstants.ITEM_KEY);
+                    this.mTitle = item.getTitle();
+                    this.mThumbnail = item.getImage();
+                }
+                this.isPlaying = intent.getBooleanExtra(WIDGET_PLAYING_EXTRA, false);
             }
-
             for (int appWidgetId : appWidgetIds) {
                 updateAppWidget(context, appWidgetManager, appWidgetId);
             }

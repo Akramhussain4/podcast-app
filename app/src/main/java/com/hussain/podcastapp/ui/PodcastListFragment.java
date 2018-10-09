@@ -1,5 +1,7 @@
 package com.hussain.podcastapp.ui;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,9 +12,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -65,6 +71,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     private boolean isClicked = true;
     private boolean mSubscribed = false;
     private String mUserId;
+    private SearchView searchView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_podcasts_list, container, false);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
         mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(getContext(), 300));
         mContext = this;
         return view;
@@ -100,8 +108,8 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         mActivityContext = (MainActivity) getActivity();
+        super.onActivityCreated(savedInstanceState);
     }
 
     private void networkCall() {
@@ -248,5 +256,41 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         if (mActivityContext != null) {
             mActivityContext.showAnimation(show);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.options_menu, menu);
+        SearchManager searchManager = (SearchManager) getActivity()
+                .getSystemService(Context.SEARCH_SERVICE);
+
+        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        if (searchManager != null) {
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getActivity().getComponentName()));
+        }
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                mAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                mAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.search) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

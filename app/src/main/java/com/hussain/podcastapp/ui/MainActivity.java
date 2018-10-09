@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -97,5 +98,10 @@ public class MainActivity extends BaseActivity {
     public void onToolBarSetUp(Toolbar toolbar, ActionBar actionBar) {
         TextView tvHeader = toolbar.findViewById(R.id.tvClassName);
         tvHeader.setText(R.string.app_name);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return false;
     }
 }

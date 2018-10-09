@@ -2,11 +2,9 @@ package com.hussain.podcastapp.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
@@ -16,6 +14,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.base.BaseActivity;
+import com.hussain.podcastapp.utils.SharedPrefUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,8 +28,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         onCreate(savedInstanceState, R.layout.activity_splash);
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        Registered = sharedPref.getBoolean("Registered", false);
+        Registered = new SharedPrefUtil(this).getIsRegistered();
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (Registered) {
                 launchMainActivity();
@@ -70,10 +68,7 @@ public class SplashActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putBoolean("Registered", true);
-                editor.apply();
+                new SharedPrefUtil(this).setIsRegistered(true);
                 launchMainActivity();
             } else {
                 // Sign in failed. If response is null the user canceled the
