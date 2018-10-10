@@ -161,6 +161,7 @@ public class AudioPlayerService extends Service implements Player.EventListener 
             }
         });
         playerNotificationManager.setPlayer(player);
+        updateWidget(true);
     }
 
     private void updateWidget(boolean playWhenReady) {

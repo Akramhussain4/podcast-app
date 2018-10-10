@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.EpisodeAdapter;
 import com.hussain.podcastapp.base.BaseActivity;
@@ -63,6 +65,7 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
     @Nullable
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout mEpisodeLayout;
+    private InterstitialAd mInterstitialAd;
 
     private String mArtworkUrl;
     private List<Item> mItems;
@@ -79,6 +82,9 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
             RssFeed(mFeedUrl);
             rvEpisodes.setLayoutManager(new LinearLayoutManager(this));
         }
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
     private void setUI() {
@@ -95,6 +101,9 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
             EpisodeAdapter adapter = new EpisodeAdapter(mItems, this);
             rvEpisodes.setAdapter(adapter);
             showAnimation(false);
+        }
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
         }
     }
 

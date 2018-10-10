@@ -20,6 +20,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.util.Util;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.base.BaseActivity;
 import com.hussain.podcastapp.model.Item;
@@ -39,6 +41,8 @@ public class PlayerActivity extends BaseActivity {
     TextView mTvSummary;
     @BindView(R.id.ivThumbnail)
     ImageView mIvThumb;
+    @BindView(R.id.adView)
+    AdView mAdView;
     private String mUrl, mTitle, mSummary, mImage;
     private AudioPlayerService mService;
     private SimpleExoPlayer mPlayer;
@@ -83,6 +87,8 @@ public class PlayerActivity extends BaseActivity {
             mPlayerView.setControllerAutoShow(true);
             mPlayerView.setControllerHideOnTouch(false);
         }
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     private void initializePlayer() {
