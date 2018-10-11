@@ -48,6 +48,7 @@
                         android:layout_height="150dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
+                        android:contentDescription="@string/podcast_thumbnail"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <TextView

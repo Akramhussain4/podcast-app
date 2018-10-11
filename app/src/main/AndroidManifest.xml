@@ -32,6 +32,10 @@
             android:parentActivityName=".ui.MainActivity" />
 
         <service android:name=".service.AudioPlayerService" />
+        <service
+            android:name=".service.NetworkConnectivity"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity android:name=".ui.SplashActivity">
             <intent-filter>

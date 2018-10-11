@@ -35,7 +35,7 @@ import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.model.Item;
 import com.hussain.podcastapp.ui.PlayerActivity;
 import com.hussain.podcastapp.utils.AppConstants;
-import com.hussain.podcastapp.utils.DownloadUtil;
+import com.hussain.podcastapp.utils.CommonUtils;
 import com.hussain.podcastapp.widget.PlayerWidget;
 
 import static com.hussain.podcastapp.utils.AppConstants.ACTION_PAUSE;
@@ -109,7 +109,7 @@ public class AudioPlayerService extends Service implements Player.EventListener 
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
                 Util.getUserAgent(context, getString(R.string.app_name)));
         CacheDataSourceFactory cacheDataSourceFactory = new CacheDataSourceFactory(
-                DownloadUtil.getCache(context),
+                CommonUtils.getCache(context),
                 dataSourceFactory,
                 CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
         MediaSource mediaSource = new ExtractorMediaSource.Factory(cacheDataSourceFactory)

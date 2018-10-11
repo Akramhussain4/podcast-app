@@ -55,7 +55,6 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     private List<Entry> mFirebaseData;
     private LookUpResponse.Results mResults;
     private AppDatabase mDb;
-    private String mUserId;
     private DatabaseReference mDatabase;
 
     @SuppressLint("MissingSuperCall")
@@ -63,7 +62,7 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     protected void onCreate(Bundle savedInstanceState) {
         onCreate(savedInstanceState, R.layout.activity_subscribe);
         mDb = AppDatabase.getInstance(this);
-        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference().child(mUserId);
         mFirebaseData = new ArrayList<>();
         mRecyclerView.setLayoutManager(new GridAutofitLayoutManager(this, 300));
@@ -79,7 +78,7 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     private void networkCall() {
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     mFirebaseData.add(postSnapshot.getValue(Entry.class));
                 }
@@ -87,7 +86,7 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });

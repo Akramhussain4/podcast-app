@@ -31,6 +31,7 @@
             android:layout_height="250dp"
             android:layout_gravity="center"
             android:padding="@dimen/dp_16"
+            android:contentDescription="@string/podcast_thumbnail"
             android:transitionName="@string/transition_name" />
 
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"></com.google.android.gms.ads.AdView>
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
 
 
         <TextView

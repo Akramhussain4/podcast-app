@@ -53,6 +53,7 @@
                         android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
+                        android:contentDescription="@string/podcast_thumbnail"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView

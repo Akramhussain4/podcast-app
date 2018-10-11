@@ -19,14 +19,12 @@ public class RoomTypeConverters {
         Gson gson = new Gson();
         Type type = new TypeToken<List<PodcastImage>>() {
         }.getType();
-        List<PodcastImage> productCategoriesList = gson.fromJson(data, type);
-        return productCategoriesList;
+        return gson.fromJson(data, type);
     }
 
     @TypeConverter
     public static String someObjectListToString(List<PodcastImage> someObjects) {
         Gson gson = new Gson();
-        String ob = gson.toJson(someObjects);
-        return ob;
+        return gson.toJson(someObjects);
     }
 }

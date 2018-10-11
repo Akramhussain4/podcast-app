@@ -65,7 +65,7 @@
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/colorAccent"
         android:drawableEnd="@drawable/ic_eye_white_24dp"
-        android:text="View"
+        android:text="@string/view"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="@+id/ivThumbnail"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -76,7 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="Subscribe"
+        android:text="@string/subscribe"
         app:layout_constraintBottom_toBottomOf="@+id/btView"
         app:layout_constraintEnd_toStartOf="@+id/btView"
         app:layout_constraintTop_toTopOf="@+id/btView" />

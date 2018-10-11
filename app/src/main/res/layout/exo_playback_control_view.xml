@@ -56,7 +56,8 @@
 
         <ImageButton
             android:id="@id/exo_rew"
-            style="@style/ExoMediaButton.Rewind" />
+            style="@style/ExoMediaButton.Rewind"
+            android:contentDescription="@string/rewind_button" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/exo_play"
@@ -75,7 +76,8 @@
 
         <ImageButton
             android:id="@id/exo_ffwd"
-            style="@style/ExoMediaButton.FastForward" />
+            style="@style/ExoMediaButton.FastForward"
+            android:contentDescription="@string/forward_button" />
 
     </LinearLayout>
 

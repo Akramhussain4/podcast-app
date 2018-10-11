@@ -43,9 +43,10 @@ public class PlayerActivity extends BaseActivity {
     ImageView mIvThumb;
     @BindView(R.id.adView)
     AdView mAdView;
-    private String mUrl, mTitle, mSummary, mImage;
+    private String mTitle;
+    private String mSummary;
+    private String mImage;
     private AudioPlayerService mService;
-    private SimpleExoPlayer mPlayer;
     private Intent intent;
     private String shareableLink;
     private boolean mBound = false;
@@ -73,7 +74,7 @@ public class PlayerActivity extends BaseActivity {
         if (b != null) {
             Item item = b.getParcelable(AppConstants.ITEM_KEY);
             shareableLink = b.getString(AppConstants.SHARE_KEY);
-            mUrl = item.getUrl();
+            String mUrl = item.getUrl();
             mImage = item.getImage();
             mTitle = item.getTitle();
             mSummary = item.getSummary();
@@ -93,7 +94,7 @@ public class PlayerActivity extends BaseActivity {
 
     private void initializePlayer() {
         if (mBound) {
-            mPlayer = mService.getplayerInstance();
+            SimpleExoPlayer mPlayer = mService.getplayerInstance();
             mPlayerView.setPlayer(mPlayer);
         }
     }

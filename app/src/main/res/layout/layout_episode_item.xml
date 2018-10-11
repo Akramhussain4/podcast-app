@@ -13,6 +13,7 @@
         android:layout_marginTop="8dp"
         android:transitionName="@string/transition_name"
         app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/episode_thumbnail"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

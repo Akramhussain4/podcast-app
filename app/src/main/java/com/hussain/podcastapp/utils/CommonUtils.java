@@ -16,6 +16,9 @@
 package com.hussain.podcastapp.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
@@ -23,7 +26,9 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 
 import java.io.File;
 
-public class DownloadUtil {
+public class CommonUtils {
+
+    private static final String TAG = CommonUtils.class.getName();
 
     private static Cache cache;
 
@@ -33,6 +38,24 @@ public class DownloadUtil {
             cache = new SimpleCache(cacheDirectory, new NoOpCacheEvictor());
         }
         return cache;
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        boolean isNetwork = false;
+        try {
+            ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = null;
+            if (connMgr != null) {
+                networkInfo = connMgr.getActiveNetworkInfo();
+            }
+            if (networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected()) {
+                isNetwork = true;
+            }
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage(), e);
+        }
+
+        return isNetwork;
     }
 
 }

@@ -71,7 +71,6 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     private boolean isClicked = true;
     private boolean mSubscribed = false;
     private String mUserId;
-    private SearchView searchView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -264,7 +263,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         SearchManager searchManager = (SearchManager) getActivity()
                 .getSystemService(Context.SEARCH_SERVICE);
 
-        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         if (searchManager != null) {
             searchView.setSearchableInfo(searchManager
                     .getSearchableInfo(getActivity().getComponentName()));

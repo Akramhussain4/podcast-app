@@ -34,6 +34,7 @@
             android:transitionName="@string/transition_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/podcast_thumbnail"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -48,7 +49,7 @@
             ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
             ads:layout_constraintEnd_toEndOf="parent"
             ads:layout_constraintStart_toEndOf="@+id/ivThumbnail"
-            ads:layout_constraintTop_toBottomOf="@+id/tvTitle"></com.google.android.gms.ads.AdView>
+            ads:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
         <TextView
             android:id="@+id/tvTitle"
@@ -81,7 +82,7 @@
             <TextView
                 android:id="@+id/tvSummary"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp" />
         </ScrollView>

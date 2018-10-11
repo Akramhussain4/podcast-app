@@ -9,6 +9,7 @@ import android.util.Log;
 import com.google.firebase.auth.FirebaseUser;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.customview.TransparentLoadAnimation;
+import com.hussain.podcastapp.service.JobScheduler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
         ButterKnife.bind(this);
         initProgress();
         setUpToolBar();
+        JobScheduler.getInstance().scheduleJob(TAG, this);
     }
 
     private void initProgress() {
