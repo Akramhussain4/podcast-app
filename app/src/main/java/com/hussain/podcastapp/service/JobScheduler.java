@@ -3,11 +3,11 @@ package com.hussain.podcastapp.service;
 import android.content.Context;
 import android.util.Log;
 
-import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
 
 public class JobScheduler {
 
@@ -27,14 +27,14 @@ public class JobScheduler {
     public void scheduleJob(String jobTag, Context context) {
         FirebaseJobDispatcher jobDispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
         Job syncJob = jobDispatcher.newJobBuilder()
-                .setService(NetworkConnectivity.class)
-                .setTag(jobTag)
+                .setService(NotificationService.class)
                 .setLifetime(Lifetime.FOREVER)
-                .setConstraints(Constraint.ON_ANY_NETWORK)
+                .setReplaceCurrent(false)
+                .setTag(jobTag)
+                .setTrigger(Trigger.executionWindow(0, 1440))
+                .setRecurring(true)
                 .build();
         jobDispatcher.mustSchedule(syncJob);
-        //   int schedule = jobDispatcher.schedule(syncJob);
-
         Log.d(TAG, "Job Scheduled ");
     }
 }

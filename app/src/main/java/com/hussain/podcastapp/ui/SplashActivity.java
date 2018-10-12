@@ -14,6 +14,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.base.BaseActivity;
+import com.hussain.podcastapp.service.JobScheduler;
 import com.hussain.podcastapp.utils.SharedPrefUtil;
 
 import java.util.Arrays;
@@ -32,6 +33,7 @@ public class SplashActivity extends BaseActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (Registered) {
                 launchMainActivity();
+                JobScheduler.getInstance().scheduleJob("notification", this);
             } else {
                 login();
             }

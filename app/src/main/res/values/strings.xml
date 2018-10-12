@@ -40,4 +40,5 @@
     <string name="google_play">Google Play</string>
     <string name="buy_me_a_coffee">Buy me a Coffee!</string>
     <string name="view">View</string>
+    <string name="notification_content">Checkout latest podcast\'s for today</string>
 </resources>
