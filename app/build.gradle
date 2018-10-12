@@ -10,18 +10,10 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    signingConfigs {
-        release {
-            storeFile file("config/podplayKey.jks")
-            storePassword "hussain"
-            keyAlias "podKey0"
-            keyPassword "hussain07"
-        }
-    }
-        buildTypes {
+
+    buildTypes {
         release {
             minifyEnabled false
-            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
