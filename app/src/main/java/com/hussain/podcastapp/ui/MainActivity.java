@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.gigamole.navigationtabstrip.NavigationTabStrip;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,7 +60,7 @@ public class MainActivity extends BaseActivity {
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withSelectionListEnabledForSingleProfile(false)
-                .withHeaderBackground(R.color.colorPrimary)
+                .withHeaderBackground(R.drawable.about_background)
                 .addProfiles(
                         new ProfileDrawerItem().withName(mFirebaseUser.getDisplayName()).withEmail(mFirebaseUser.getEmail()).withIcon(mFirebaseUser.getPhotoUrl())
                 )
@@ -96,8 +95,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onToolBarSetUp(Toolbar toolbar, ActionBar actionBar) {
-        TextView tvHeader = toolbar.findViewById(R.id.tvClassName);
-        tvHeader.setText(R.string.app_name);
+        toolbar.setTitle("Pod play");
+        toolbar.setTitleTextColor(getColor(R.color.colorWhite));
     }
 
     @Override

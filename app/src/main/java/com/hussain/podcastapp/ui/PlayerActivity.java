@@ -94,7 +94,7 @@ public class PlayerActivity extends BaseActivity {
 
     private void initializePlayer() {
         if (mBound) {
-            SimpleExoPlayer mPlayer = mService.getplayerInstance();
+            SimpleExoPlayer mPlayer = mService.getPlayerInstance();
             mPlayerView.setPlayer(mPlayer);
         }
     }
@@ -112,7 +112,7 @@ public class PlayerActivity extends BaseActivity {
         mTvSummary.setText(Html.fromHtml(mSummary));
         GlideApp.with(this)
                 .load(mImage)
-                .placeholder(R.color.colorPrimary)
+                .placeholder(R.drawable.about_background)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(mIvThumb);
     }

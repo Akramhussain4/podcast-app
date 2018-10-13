@@ -48,7 +48,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
         GlideApp.with(mContext)
                 .load(item.getImage())
                 .centerCrop()
-                .placeholder(R.color.colorPrimary)
+                .placeholder(R.drawable.about_background)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(episodeViewHolder.mThumb);
         episodeViewHolder.itemView.setOnClickListener(view -> {

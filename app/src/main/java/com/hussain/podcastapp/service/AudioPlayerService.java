@@ -64,6 +64,7 @@ public class AudioPlayerService extends Service implements Player.EventListener 
             playerNotificationManager.setPlayer(null);
             player.release();
             player = null;
+            stopSelf();
         }
     }
 
@@ -73,8 +74,8 @@ public class AudioPlayerService extends Service implements Player.EventListener 
         return mBinder;
     }
 
-    public SimpleExoPlayer getplayerInstance() {
-        if (player == null) {
+    public SimpleExoPlayer getPlayerInstance() {
+        if (item != null && player == null && !TextUtils.isEmpty(item.getUrl())) {
             startPlayer();
         }
         return player;
@@ -83,21 +84,23 @@ public class AudioPlayerService extends Service implements Player.EventListener 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = intent.getAction();
-        if (!TextUtils.isEmpty(action) && action.equalsIgnoreCase(ACTION_PLAY)) {
-            player.setPlayWhenReady(true);
-
-        }
-        if (!TextUtils.isEmpty(action) && action.equalsIgnoreCase(ACTION_PAUSE)) {
-            player.setPlayWhenReady(false);
-        }
-        //releasePlayer();
+        releasePlayer();
         Bundle b = intent.getBundleExtra(AppConstants.BUNDLE_KEY);
         if (b != null) {
             item = b.getParcelable(AppConstants.ITEM_KEY);
         }
-        if (player == null) {
+        if (item != null && player == null && !TextUtils.isEmpty(item.getUrl())) {
             startPlayer();
+        }
+        String action = intent.getAction();
+        if (player != null) {
+            if (!TextUtils.isEmpty(action) && action.equalsIgnoreCase(ACTION_PLAY)) {
+                player.setPlayWhenReady(true);
+
+            }
+            if (!TextUtils.isEmpty(action) && action.equalsIgnoreCase(ACTION_PAUSE)) {
+                player.setPlayWhenReady(false);
+            }
         }
         return START_STICKY;
     }
@@ -161,7 +164,6 @@ public class AudioPlayerService extends Service implements Player.EventListener 
             }
         });
         playerNotificationManager.setPlayer(player);
-        updateWidget(true);
     }
 
     private void updateWidget(boolean playWhenReady) {
@@ -176,7 +178,6 @@ public class AudioPlayerService extends Service implements Player.EventListener 
         intent.putExtra(PlayerWidget.WIDGET_PLAYING_EXTRA, playWhenReady);
         sendBroadcast(intent);
     }
-
 
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {

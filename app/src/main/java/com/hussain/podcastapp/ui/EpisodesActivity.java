@@ -83,7 +83,7 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
             rvEpisodes.setLayoutManager(new LinearLayoutManager(this));
         }
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId("ca-app-pub-4616631912723447/5671156240");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 

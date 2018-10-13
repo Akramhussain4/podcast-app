@@ -9,9 +9,14 @@ import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
 
+import java.util.concurrent.TimeUnit;
+
 public class JobScheduler {
 
     private static String TAG = JobScheduler.class.getSimpleName();
+
+    final int periodicity = (int) TimeUnit.HOURS.toSeconds(12);
+    final int toleranceInterval = (int) TimeUnit.HOURS.toSeconds(1);
     private static JobScheduler instance = null;
 
     private JobScheduler() {
@@ -31,7 +36,7 @@ public class JobScheduler {
                 .setLifetime(Lifetime.FOREVER)
                 .setReplaceCurrent(false)
                 .setTag(jobTag)
-                .setTrigger(Trigger.executionWindow(0, 1440))
+                .setTrigger(Trigger.executionWindow(periodicity, periodicity + toleranceInterval))
                 .setRecurring(true)
                 .build();
         jobDispatcher.mustSchedule(syncJob);
