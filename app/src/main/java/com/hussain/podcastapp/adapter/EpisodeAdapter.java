@@ -1,6 +1,7 @@
 package com.hussain.podcastapp.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -10,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.airbnb.lottie.ImageAssetDelegate;
+import com.airbnb.lottie.LottieDrawable;
+import com.airbnb.lottie.LottieImageAsset;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.model.Item;
@@ -45,10 +49,17 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
         final Item item = mItemList.get(i);
         episodeViewHolder.mTitle.setText(item.getTitle());
         episodeViewHolder.mSummary.setText(Html.fromHtml(item.getSummary()));
+        LottieDrawable drawable = new LottieDrawable();
+        drawable.setImageAssetDelegate(new ImageAssetDelegate() {
+            @Override
+            public Bitmap fetchBitmap(LottieImageAsset asset) {
+                return null;
+            }
+        });
         GlideApp.with(mContext)
                 .load(item.getImage())
                 .centerCrop()
-                .placeholder(R.drawable.about_background)
+                .placeholder(R.drawable.placeholder_square)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(episodeViewHolder.mThumb);
         episodeViewHolder.itemView.setOnClickListener(view -> {

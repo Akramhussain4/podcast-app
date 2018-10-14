@@ -16,9 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:scaleType="matrix"
+            android:scaleType="centerCrop"
             android:contentDescription="@string/podcast_thumbnail"
-            tools:src="@color/colorAccent" />
+            tools:src="@drawable/placeholder_square" />
 
         <LinearLayout
             android:id="@+id/podcast_holder"
