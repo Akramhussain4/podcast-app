@@ -6,12 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.ui.MainActivity;
+
+import androidx.core.app.NotificationCompat;
 
 public class NotificationService extends JobService {
 
