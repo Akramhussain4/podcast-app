@@ -44,9 +44,9 @@ import static com.hussain.podcastapp.utils.AppConstants.ACTION_PLAY;
 public class AudioPlayerService extends Service implements Player.EventListener {
 
     private final IBinder mBinder = new LocalBinder();
-    private SimpleExoPlayer player;
-    private Item item;
-    private PlayerNotificationManager playerNotificationManager;
+    private SimpleExoPlayer mPlayer;
+    private Item mItem;
+    private PlayerNotificationManager mPlayerNotificationManager;
 
     @Override
     public void onCreate() {
@@ -60,11 +60,10 @@ public class AudioPlayerService extends Service implements Player.EventListener 
     }
 
     private void releasePlayer() {
-        if (player != null) {
-            playerNotificationManager.setPlayer(null);
-            player.release();
-            player = null;
-            stopSelf();
+        if (mPlayer != null) {
+            mPlayerNotificationManager.setPlayer(null);
+            mPlayer.release();
+            mPlayer = null;
         }
     }
 
@@ -75,31 +74,31 @@ public class AudioPlayerService extends Service implements Player.EventListener 
     }
 
     public SimpleExoPlayer getPlayerInstance() {
-        if (item != null && player == null && !TextUtils.isEmpty(item.getUrl())) {
+        if (mItem != null && mPlayer == null && !TextUtils.isEmpty(mItem.getUrl())) {
             startPlayer();
         }
-        return player;
+        return mPlayer;
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        releasePlayer();
         Bundle b = intent.getBundleExtra(AppConstants.BUNDLE_KEY);
         if (b != null) {
-            item = b.getParcelable(AppConstants.ITEM_KEY);
+            releasePlayer();
+            mItem = b.getParcelable(AppConstants.ITEM_KEY);
         }
-        if (item != null && player == null && !TextUtils.isEmpty(item.getUrl())) {
+        if (mItem != null && mPlayer == null && !TextUtils.isEmpty(mItem.getUrl())) {
             startPlayer();
         }
         String action = intent.getAction();
-        if (player != null) {
+        if (mPlayer != null) {
             if (!TextUtils.isEmpty(action) && action.equalsIgnoreCase(ACTION_PLAY)) {
-                player.setPlayWhenReady(true);
+                mPlayer.setPlayWhenReady(true);
 
             }
             if (!TextUtils.isEmpty(action) && action.equalsIgnoreCase(ACTION_PAUSE)) {
-                player.setPlayWhenReady(false);
+                mPlayer.setPlayWhenReady(false);
             }
         }
         return START_STICKY;
@@ -107,8 +106,8 @@ public class AudioPlayerService extends Service implements Player.EventListener 
 
     private void startPlayer() {
         final Context context = this;
-        Uri uri = Uri.parse(item.getUrl());
-        player = ExoPlayerFactory.newSimpleInstance(context, new DefaultTrackSelector());
+        Uri uri = Uri.parse(mItem.getUrl());
+        mPlayer = ExoPlayerFactory.newSimpleInstance(context, new DefaultTrackSelector());
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
                 Util.getUserAgent(context, getString(R.string.app_name)));
         CacheDataSourceFactory cacheDataSourceFactory = new CacheDataSourceFactory(
@@ -117,16 +116,16 @@ public class AudioPlayerService extends Service implements Player.EventListener 
                 CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
         MediaSource mediaSource = new ExtractorMediaSource.Factory(cacheDataSourceFactory)
                 .createMediaSource(uri);
-        player.prepare(mediaSource);
-        player.addListener(this);
-        player.setPlayWhenReady(true);
-        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(context, AppConstants.PLAYBACK_CHANNEL_ID,
+        mPlayer.prepare(mediaSource);
+        mPlayer.addListener(this);
+        mPlayer.setPlayWhenReady(true);
+        mPlayerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(context, AppConstants.PLAYBACK_CHANNEL_ID,
                 R.string.playback_channel_name,
                 AppConstants.PLAYBACK_NOTIFICATION_ID,
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
                     public String getCurrentContentTitle(Player player) {
-                        return item.getTitle();
+                        return mItem.getTitle();
                     }
 
                     @Nullable
@@ -134,7 +133,7 @@ public class AudioPlayerService extends Service implements Player.EventListener 
                     public PendingIntent createCurrentContentIntent(Player player) {
                         Intent intent = new Intent(context, PlayerActivity.class);
                         Bundle serviceBundle = new Bundle();
-                        serviceBundle.putParcelable(AppConstants.ITEM_KEY, item);
+                        serviceBundle.putParcelable(AppConstants.ITEM_KEY, mItem);
                         intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
                         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     }
@@ -142,7 +141,7 @@ public class AudioPlayerService extends Service implements Player.EventListener 
                     @Nullable
                     @Override
                     public String getCurrentContentText(Player player) {
-                        return item.getSummary();
+                        return mItem.getSummary();
                     }
 
                     @Nullable
@@ -152,7 +151,7 @@ public class AudioPlayerService extends Service implements Player.EventListener 
                     }
                 }
         );
-        playerNotificationManager.setNotificationListener(new PlayerNotificationManager.NotificationListener() {
+        mPlayerNotificationManager.setNotificationListener(new PlayerNotificationManager.NotificationListener() {
             @Override
             public void onNotificationStarted(int notificationId, Notification notification) {
                 startForeground(notificationId, notification);
@@ -160,10 +159,17 @@ public class AudioPlayerService extends Service implements Player.EventListener 
 
             @Override
             public void onNotificationCancelled(int notificationId) {
+                Intent intent = new Intent(context, PlayerWidget.class);
+                intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                int[] ids = AppWidgetManager.getInstance(getApplication())
+                        .getAppWidgetIds(new ComponentName(getApplication(), PlayerWidget.class));
+                intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                intent.putExtra(PlayerWidget.WIDGET_NO_PLAYING_EXTRA, "");
+                sendBroadcast(intent);
                 stopSelf();
             }
         });
-        playerNotificationManager.setPlayer(player);
+        mPlayerNotificationManager.setPlayer(mPlayer);
     }
 
     private void updateWidget(boolean playWhenReady) {
@@ -173,7 +179,7 @@ public class AudioPlayerService extends Service implements Player.EventListener 
                 .getAppWidgetIds(new ComponentName(getApplication(), PlayerWidget.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         Bundle serviceBundle = new Bundle();
-        serviceBundle.putParcelable(AppConstants.ITEM_KEY, item);
+        serviceBundle.putParcelable(AppConstants.ITEM_KEY, mItem);
         intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
         intent.putExtra(PlayerWidget.WIDGET_PLAYING_EXTRA, playWhenReady);
         sendBroadcast(intent);
@@ -186,12 +192,10 @@ public class AudioPlayerService extends Service implements Player.EventListener 
 
     @Override
     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
     }
 
     @Override
     public void onLoadingChanged(boolean isLoading) {
-
     }
 
     @Override

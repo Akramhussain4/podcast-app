@@ -53,14 +53,14 @@ public class MainActivity extends BaseActivity {
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                GlideApp.with(imageView.getContext()).load(mFirebaseUser.getPhotoUrl()).placeholder(R.color.colorAccent).into(imageView);
+                GlideApp.with(imageView.getContext()).load(mFirebaseUser.getPhotoUrl()).into(imageView);
             }
         });
         new DrawerBuilder().withActivity(this).build();
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withSelectionListEnabledForSingleProfile(false)
-                .withHeaderBackground(R.drawable.about_background)
+                .withHeaderBackground(R.drawable.header_background)
                 .addProfiles(
                         new ProfileDrawerItem().withName(mFirebaseUser.getDisplayName()).withEmail(mFirebaseUser.getEmail()).withIcon(mFirebaseUser.getPhotoUrl())
                 )
