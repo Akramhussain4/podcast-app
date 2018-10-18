@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -37,6 +36,8 @@ import com.hussain.podcastapp.ui.PlayerActivity;
 import com.hussain.podcastapp.utils.AppConstants;
 import com.hussain.podcastapp.utils.CommonUtils;
 import com.hussain.podcastapp.widget.PlayerWidget;
+
+import androidx.annotation.Nullable;
 
 import static com.hussain.podcastapp.utils.AppConstants.ACTION_PAUSE;
 import static com.hussain.podcastapp.utils.AppConstants.ACTION_PLAY;

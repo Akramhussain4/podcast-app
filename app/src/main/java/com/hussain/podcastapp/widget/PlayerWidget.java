@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -19,6 +18,8 @@ import com.hussain.podcastapp.service.AudioPlayerService;
 import com.hussain.podcastapp.ui.PlayerActivity;
 import com.hussain.podcastapp.utils.AppConstants;
 import com.hussain.podcastapp.utils.GlideApp;
+
+import androidx.annotation.NonNull;
 
 public class PlayerWidget extends AppWidgetProvider {
 

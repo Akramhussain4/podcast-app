@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -19,6 +17,9 @@ import com.hussain.podcastapp.utils.SharedPrefUtil;
 
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 public class SplashActivity extends BaseActivity {
 

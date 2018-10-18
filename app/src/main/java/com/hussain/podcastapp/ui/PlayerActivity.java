@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +27,8 @@ import com.hussain.podcastapp.service.AudioPlayerService;
 import com.hussain.podcastapp.utils.AppConstants;
 import com.hussain.podcastapp.utils.GlideApp;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 
 public class PlayerActivity extends BaseActivity {

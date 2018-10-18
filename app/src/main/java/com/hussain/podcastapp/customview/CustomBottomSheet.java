@@ -1,13 +1,13 @@
 package com.hussain.podcastapp.customview;
 
 import android.app.Activity;
-import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.model.Entry;
 import com.hussain.podcastapp.utils.GlideApp;
@@ -23,7 +23,7 @@ public class CustomBottomSheet {
         }
 
         View bottomSheetBehavior = activity.getLayoutInflater().inflate(R.layout.layout_bottom_sheet, null);
-        BottomSheetDialog bottomSheetDialog = new android.support.design.widget.BottomSheetDialog(activity);
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(activity);
         bottomSheetDialog.setContentView(bottomSheetBehavior);
         bottomSheetDialog.setCanceledOnTouchOutside(true);
         bottomSheetDialog.setCancelable(true);
