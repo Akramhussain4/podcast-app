@@ -31,6 +31,14 @@
           }
         },
         {
+          "client_id": "419405426689-15luc9n2d127u7fo3adkiljbj9s3l1qr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hussain.podcastapp",
+            "certificate_hash": "e73edb069cbd97991b8b72a08be175e7e7dcc84b"
+          }
+        },
+        {
           "client_id": "419405426689-bbgp82ckeif0g6be4nbotocc5gg5k6eu.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -56,7 +64,8 @@
         "ads_service": {
           "status": 2
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-4616631912723447~5997887514"
     }
   ],
   "configuration_version": "1"

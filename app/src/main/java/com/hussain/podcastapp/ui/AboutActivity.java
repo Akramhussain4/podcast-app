@@ -47,6 +47,8 @@ public class AboutActivity extends BaseActivity {
 
     @OnClick(R.id.tvGooglePlay)
     public void googlePlayClick() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/dev?id=6822584155686265410"));
+        startActivity(intent);
     }
 
     @OnClick(R.id.tvCoffee)

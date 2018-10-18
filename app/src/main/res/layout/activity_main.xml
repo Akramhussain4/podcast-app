@@ -11,45 +11,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="18dp"
-            android:background="@color/colorPrimaryDark" />
-
-        <com.gigamole.navigationtabstrip.NavigationTabStrip
-            android:id="@+id/nts"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginRight="30dp"
-            android:elevation="6dp"
-            app:nts_active_color="@color/colorWhite"
-            app:nts_color="@color/colorWhite"
-            app:nts_corners_radius="3.5dp"
-            app:nts_factor="0.8"
-            app:nts_gravity="bottom"
-            app:nts_inactive_color="#81ffffff"
-            app:nts_size="14dp"
-            app:nts_titles="@array/titles"
-            app:nts_type="point"
-            app:nts_typeface="fonts/moon.otf"
-            app:nts_weight="6dp" />
-
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:tabIndicatorColor="@color/colorWhite"
+        app:tabInlineLabel="true"
+        app:tabTextColor="@color/colorWhite" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp"
@@ -58,6 +30,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
-
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

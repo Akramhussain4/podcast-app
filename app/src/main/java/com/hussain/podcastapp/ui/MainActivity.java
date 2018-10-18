@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
-import com.gigamole.navigationtabstrip.NavigationTabStrip;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.PodcastPagerAdapter;
@@ -24,6 +24,9 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -33,8 +36,8 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.vp)
     ViewPager mViewPager;
-    @BindView(R.id.nts)
-    NavigationTabStrip mNavStrip;
+    @BindView(R.id.tabLayout)
+    TabLayout mTabLayout;
 
     @SuppressLint("MissingSuperCall")
     @Override
@@ -47,9 +50,14 @@ public class MainActivity extends BaseActivity {
     private void setUI() {
         PodcastPagerAdapter adapter = new PodcastPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(adapter);
-        mNavStrip.setAnimationDuration(200);
-        mNavStrip.setTitles("TECH", "Science", "Health", "Business", "Sports");
-        mNavStrip.setViewPager(mViewPager, 0);
+        List<String> types = new ArrayList<>();
+        types.add("TECH");
+        types.add("Science");
+        types.add("Health");
+        types.add("Business");
+        types.add("Sports");
+        adapter.refresh(types);
+        mTabLayout.setupWithViewPager(mViewPager, true);
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {

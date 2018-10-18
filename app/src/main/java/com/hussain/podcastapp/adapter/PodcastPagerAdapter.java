@@ -5,14 +5,21 @@ import android.os.Bundle;
 import com.hussain.podcastapp.ui.PodcastListFragment;
 import com.hussain.podcastapp.utils.AppConstants;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 public class PodcastPagerAdapter extends FragmentPagerAdapter {
 
+    private List<String> list;
+
     public PodcastPagerAdapter(FragmentManager fm) {
         super(fm);
+        list = new ArrayList<>();
     }
 
     @Override
@@ -52,8 +59,19 @@ public class PodcastPagerAdapter extends FragmentPagerAdapter {
         return null;
     }
 
+    public void refresh(List<String> list) {
+        this.list = list;
+        notifyDataSetChanged();
+    }
+
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return list.get(position);
+    }
+
     @Override
     public int getCount() {
-        return 5;
+        return list.size();
     }
 }
