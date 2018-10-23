@@ -41,4 +41,5 @@
     <string name="buy_me_a_coffee">Buy me a Coffee!</string>
     <string name="view">View</string>
     <string name="notification_content">Checkout latest podcast\'s for today</string>
+    <string name="no_network_message">Check your network connection!</string>
 </resources>

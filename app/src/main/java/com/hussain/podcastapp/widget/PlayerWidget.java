@@ -46,13 +46,15 @@ public class PlayerWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.widget_root, playerPendingIntent);
         // Instruct the widget manager to update the widget
         if (mTitle == null) {
-            views.setViewVisibility(R.id.podcast_title, View.GONE);
+            views.setViewVisibility(R.id.widget_thumbnail, View.INVISIBLE);
+            views.setViewVisibility(R.id.widget_title, View.GONE);
             views.setViewVisibility(R.id.widget_play, View.GONE);
             views.setViewVisibility(R.id.widget_pause, View.GONE);
             views.setViewVisibility(R.id.widget_no_playing, View.VISIBLE);
         } else {
             views.setViewVisibility(R.id.widget_no_playing, View.GONE);
             views.setViewVisibility(R.id.widget_title, View.VISIBLE);
+            views.setViewVisibility(R.id.widget_thumbnail, View.VISIBLE);
             views.setTextViewText(R.id.widget_title, mTitle);
             views.setViewVisibility(R.id.widget_play, View.VISIBLE);
             views.setViewVisibility(R.id.widget_pause, View.VISIBLE);
@@ -66,6 +68,7 @@ public class PlayerWidget extends AppWidgetProvider {
                 GlideApp.with(context)
                         .asBitmap()
                         .load(mThumbnail)
+                        .override(200, 200)
                         .into(appWidgetTarget);
             }
             if (isPlaying) {

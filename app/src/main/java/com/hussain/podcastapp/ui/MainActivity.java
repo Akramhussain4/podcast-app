@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
-import com.gigamole.navigationtabstrip.NavigationTabStrip;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.hussain.podcastapp.R;
 import com.hussain.podcastapp.adapter.PodcastPagerAdapter;
@@ -24,6 +24,9 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
@@ -33,8 +36,8 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.vp)
     ViewPager mViewPager;
-    @BindView(R.id.nts)
-    NavigationTabStrip mNavStrip;
+    @BindView(R.id.tabLayout)
+    TabLayout mTabLayout;
 
     @SuppressLint("MissingSuperCall")
     @Override
@@ -47,20 +50,25 @@ public class MainActivity extends BaseActivity {
     private void setUI() {
         PodcastPagerAdapter adapter = new PodcastPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(adapter);
-        mNavStrip.setAnimationDuration(200);
-        mNavStrip.setTitles("TECH", "Science", "Health", "Business", "Sports");
-        mNavStrip.setViewPager(mViewPager, 0);
+        List<String> types = new ArrayList<>();
+        types.add("TECH");
+        types.add("Science");
+        types.add("Health");
+        types.add("Business");
+        types.add("Sports");
+        adapter.refresh(types);
+        mTabLayout.setupWithViewPager(mViewPager, true);
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                GlideApp.with(imageView.getContext()).load(mFirebaseUser.getPhotoUrl()).placeholder(R.color.colorAccent).into(imageView);
+                GlideApp.with(imageView.getContext()).load(mFirebaseUser.getPhotoUrl()).into(imageView);
             }
         });
         new DrawerBuilder().withActivity(this).build();
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withSelectionListEnabledForSingleProfile(false)
-                .withHeaderBackground(R.drawable.about_background)
+                .withHeaderBackground(R.drawable.header_background)
                 .addProfiles(
                         new ProfileDrawerItem().withName(mFirebaseUser.getDisplayName()).withEmail(mFirebaseUser.getEmail()).withIcon(mFirebaseUser.getPhotoUrl())
                 )
@@ -71,10 +79,10 @@ public class MainActivity extends BaseActivity {
                 .withToolbar(mToolbar)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home).withSelectable(false),
+                        new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home).withSelectable(true),
                         new PrimaryDrawerItem().withIdentifier(2).withName("Subscriptions").withIcon(R.drawable.ic_heart_box).withSelectable(false),
                         new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withIdentifier(4).withIcon(R.drawable.ic_info).withName("About").withSelectable(false)
+                        new SecondaryDrawerItem().withIdentifier(3).withIcon(R.drawable.ic_info).withName("About").withSelectable(false)
                 )
                 .withOnDrawerItemClickListener((view, position, drawerItem) -> {
                     if (drawerItem != null) {
@@ -82,7 +90,7 @@ public class MainActivity extends BaseActivity {
                             case 2:
                                 startActivity(new Intent(this, SubscribeActivity.class));
                                 break;
-                            case 4:
+                            case 3:
                                 startActivity(new Intent(this, AboutActivity.class));
                                 break;
                         }

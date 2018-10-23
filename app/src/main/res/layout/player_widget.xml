@@ -23,6 +23,7 @@
         android:id="@+id/widget_thumbnail"
         android:layout_width="90dp"
         android:layout_height="90dp"
+        android:src="@drawable/podcast_placeholder"
         android:layout_marginStart="@dimen/dp_16"
         android:contentDescription="@string/podcast_thumbnail" />
 
