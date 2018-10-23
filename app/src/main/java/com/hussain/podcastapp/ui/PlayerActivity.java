@@ -129,10 +129,12 @@ public class PlayerActivity extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        playerPosition = mPlayer.getCurrentPosition();
-        outState.putLong("PLAYER_POSITION", playerPosition);
-        getPlayerWhenReady = mPlayer.getPlayWhenReady();
-        outState.putBoolean("PLAY_WHEN_READY", getPlayerWhenReady);
+        if (mPlayer != null) {
+            playerPosition = mPlayer.getCurrentPosition();
+            outState.putLong("PLAYER_POSITION", playerPosition);
+            getPlayerWhenReady = mPlayer.getPlayWhenReady();
+            outState.putBoolean("PLAY_WHEN_READY", getPlayerWhenReady);
+        }
         super.onSaveInstanceState(outState);
     }
 

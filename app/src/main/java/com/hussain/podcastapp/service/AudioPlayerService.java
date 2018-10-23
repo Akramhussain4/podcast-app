@@ -168,6 +168,7 @@ public class AudioPlayerService extends Service implements Player.EventListener 
                 intent.putExtra(PlayerWidget.WIDGET_NO_PLAYING_EXTRA, "");
                 sendBroadcast(intent);
                 stopSelf();
+                stopForeground(true);
             }
         });
         mPlayerNotificationManager.setPlayer(mPlayer);

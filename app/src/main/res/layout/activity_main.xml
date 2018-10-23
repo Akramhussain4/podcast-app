@@ -20,6 +20,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include"
         app:tabIndicatorColor="@color/colorWhite"
+        app:tabGravity="fill"
+        app:tabMode="scrollable"
         app:tabInlineLabel="true"
         app:tabTextColor="@color/colorWhite" />
 

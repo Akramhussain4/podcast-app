@@ -79,10 +79,10 @@ public class MainActivity extends BaseActivity {
                 .withToolbar(mToolbar)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home).withSelectable(false),
+                        new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home).withSelectable(true),
                         new PrimaryDrawerItem().withIdentifier(2).withName("Subscriptions").withIcon(R.drawable.ic_heart_box).withSelectable(false),
                         new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withIdentifier(4).withIcon(R.drawable.ic_info).withName("About").withSelectable(false)
+                        new SecondaryDrawerItem().withIdentifier(3).withIcon(R.drawable.ic_info).withName("About").withSelectable(false)
                 )
                 .withOnDrawerItemClickListener((view, position, drawerItem) -> {
                     if (drawerItem != null) {
@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity {
                             case 2:
                                 startActivity(new Intent(this, SubscribeActivity.class));
                                 break;
-                            case 4:
+                            case 3:
                                 startActivity(new Intent(this, AboutActivity.class));
                                 break;
                         }

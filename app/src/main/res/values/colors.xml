@@ -7,4 +7,10 @@
     <color name="colorSecodayText">#757575</color>
     <color name="colorBlack">#000</color>
     <color name="colorWhite">#ffff</color>
+    <color name="material_drawer_primary_text">@color/colorWhite</color>
+    <color name="material_drawer_secondary_text">@color/colorWhite</color>
+    <color name="material_drawer_selected_text">@color/colorWhite</color>
+    <color name="material_drawer_background">@color/colorPrimary</color>
+
+    <color name="material_drawer_divider">#4ed7ccc8</color>
 </resources>
