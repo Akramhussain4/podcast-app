@@ -75,10 +75,10 @@ public class PlayerActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         onCreate(savedInstanceState, R.layout.activity_player);
         mSavedState = savedInstanceState;
-        Bundle b = getIntent().getBundleExtra(AppConstants.BUNDLE_KEY);
+        Bundle b = getIntent().getBundleExtra(AppConstants.INSTANCE.getBUNDLE_KEY());
         if (b != null) {
-            Item item = b.getParcelable(AppConstants.ITEM_KEY);
-            shareableLink = b.getString(AppConstants.SHARE_KEY);
+            Item item = b.getParcelable(AppConstants.INSTANCE.getITEM_KEY());
+            shareableLink = b.getString(AppConstants.INSTANCE.getSHARE_KEY());
             startPlayerService(item);
         }
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -92,8 +92,8 @@ public class PlayerActivity extends BaseActivity {
             mSummary = item.getSummary();
             intent = new Intent(this, AudioPlayerService.class);
             Bundle serviceBundle = new Bundle();
-            serviceBundle.putParcelable(AppConstants.ITEM_KEY, item);
-            intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
+            serviceBundle.putParcelable(AppConstants.INSTANCE.getITEM_KEY(), item);
+            intent.putExtra(AppConstants.INSTANCE.getBUNDLE_KEY(), serviceBundle);
             stopService(intent);
             Util.startForegroundService(this, intent);
         } else {

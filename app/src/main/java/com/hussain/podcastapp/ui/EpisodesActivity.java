@@ -76,8 +76,8 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
     protected void onCreate(Bundle savedInstanceState) {
         onCreate(savedInstanceState, R.layout.activity_episodes);
         Intent b = getIntent();
-        String mFeedUrl = b.getStringExtra(AppConstants.FEED_URL_KEY);
-        mArtworkUrl = b.getStringExtra(AppConstants.ARTWORK_URL);
+        String mFeedUrl = b.getStringExtra(AppConstants.INSTANCE.getFEED_URL_KEY());
+        mArtworkUrl = b.getStringExtra(AppConstants.INSTANCE.getARTWORK_URL());
         if (mFeedUrl != null) {
             RssFeed(mFeedUrl);
             rvEpisodes.setLayoutManager(new LinearLayoutManager(this));
@@ -151,9 +151,9 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
     public void onEpisodeClick(Item item, int position, ImageView view) {
         Intent intent = new Intent(this, PlayerActivity.class);
         Bundle dataBundle = new Bundle();
-        dataBundle.putParcelable(AppConstants.ITEM_KEY, item);
-        dataBundle.putString(AppConstants.SHARE_KEY, mChannel.getShareLink());
-        intent.putExtra(AppConstants.BUNDLE_KEY, dataBundle);
+        dataBundle.putParcelable(AppConstants.INSTANCE.getITEM_KEY(), item);
+        dataBundle.putString(AppConstants.INSTANCE.getSHARE_KEY(), mChannel.getShareLink());
+        intent.putExtra(AppConstants.INSTANCE.getBUNDLE_KEY(), dataBundle);
         Bundle transitionBundle = ActivityOptions.makeSceneTransitionAnimation(this, view, view.getTransitionName()).toBundle();
         startActivity(intent, transitionBundle);
 
@@ -172,13 +172,13 @@ public class EpisodesActivity extends BaseActivity implements EpisodeAdapter.Epi
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(AppConstants.SCROLL_POSITION, rvEpisodes.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(AppConstants.INSTANCE.getSCROLL_POSITION(), rvEpisodes.getLayoutManager().onSaveInstanceState());
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        rvEpisodes.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(AppConstants.SCROLL_POSITION));
+        rvEpisodes.getLayoutManager().onRestoreInstanceState(savedInstanceState.getParcelable(AppConstants.INSTANCE.getSCROLL_POSITION()));
         super.onRestoreInstanceState(savedInstanceState);
     }
 

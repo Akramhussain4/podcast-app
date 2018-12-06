@@ -34,7 +34,7 @@ public class SplashActivity extends BaseActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (Registered) {
                 launchMainActivity();
-                JobScheduler.getInstance().scheduleJob("notification", this);
+                JobScheduler.Companion.getInstance().scheduleJob("notification", this);
             } else {
                 login();
             }
@@ -70,7 +70,7 @@ public class SplashActivity extends BaseActivity {
             IdpResponse response = IdpResponse.fromResultIntent(data);
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                setMFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
                 new SharedPrefUtil(this).setIsRegistered(true);
                 launchMainActivity();
             } else {

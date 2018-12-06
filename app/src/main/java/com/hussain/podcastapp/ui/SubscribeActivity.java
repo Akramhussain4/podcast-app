@@ -61,7 +61,7 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         onCreate(savedInstanceState, R.layout.activity_subscribe);
-        mDb = AppDatabase.getInstance(this);
+        mDb = AppDatabase.Companion.getInstance(this);
         String mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference().child(mUserId);
         mFirebaseData = new ArrayList<>();
@@ -95,7 +95,7 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     private void insertData() {
         showAnimation(false);
         if (mFirebaseData != null && mFirebaseData.size() > 0) {
-            AppExecutors.getInstance().getDiskIO().execute(() ->
+            AppExecutors.Companion.getInstance().getDiskIO().execute(() ->
                     mDb.entryDao().insertPodcastList(mFirebaseData));
             setUI();
         } else {
@@ -106,7 +106,7 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     }
 
     private void setUI() {
-        AppExecutors.getInstance().getDiskIO().execute(() -> {
+        AppExecutors.Companion.getInstance().getDiskIO().execute(() -> {
             mEntryData = mDb.entryDao().loadAllPodcasts();
             if (mEntryData != null && mEntryData.size() > 0) {
                 runOnUiThread(() -> {
@@ -164,8 +164,8 @@ public class SubscribeActivity extends BaseActivity implements PodcastAdapter.Po
     private void openEpisode(LookUpResponse.Results results) {
         showAnimation(false);
         Intent intent = new Intent(this, EpisodesActivity.class);
-        intent.putExtra(AppConstants.FEED_URL_KEY, results.getFeedUrl());
-        intent.putExtra(AppConstants.ARTWORK_URL, results.getArtWork());
+        intent.putExtra(AppConstants.INSTANCE.getFEED_URL_KEY(), results.getFeedUrl());
+        intent.putExtra(AppConstants.INSTANCE.getARTWORK_URL(), results.getArtWork());
         startActivity(intent);
     }
 }

@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         onCreate(savedInstanceState, R.layout.activity_main);
-        mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        setMFirebaseUser(FirebaseAuth.getInstance().getCurrentUser());
         setUI();
     }
 
@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                GlideApp.with(imageView.getContext()).load(mFirebaseUser.getPhotoUrl()).into(imageView);
+                GlideApp.with(imageView.getContext()).load(getMFirebaseUser().getPhotoUrl()).into(imageView);
             }
         });
         new DrawerBuilder().withActivity(this).build();
@@ -70,13 +70,13 @@ public class MainActivity extends BaseActivity {
                 .withSelectionListEnabledForSingleProfile(false)
                 .withHeaderBackground(R.drawable.header_background)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(mFirebaseUser.getDisplayName()).withEmail(mFirebaseUser.getEmail()).withIcon(mFirebaseUser.getPhotoUrl())
+                        new ProfileDrawerItem().withName(getMFirebaseUser().getDisplayName()).withEmail(getMFirebaseUser().getEmail()).withIcon(getMFirebaseUser().getPhotoUrl())
                 )
                 .withOnAccountHeaderListener((view, profile, currentProfile) -> false)
                 .build();
         new DrawerBuilder()
                 .withActivity(this)
-                .withToolbar(mToolbar)
+                .withToolbar(getMToolbar())
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home).withSelectable(true),

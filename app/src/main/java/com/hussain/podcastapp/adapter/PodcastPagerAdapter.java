@@ -28,31 +28,31 @@ public class PodcastPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 PodcastListFragment techFragment = new PodcastListFragment();
                 Bundle techB = new Bundle();
-                techB.putString(AppConstants.CATEGORY_KEY, AppConstants.TECH_GENRE);
+                techB.putString(AppConstants.INSTANCE.getCATEGORY_KEY(), AppConstants.INSTANCE.getTECH_GENRE());
                 techFragment.setArguments(techB);
                 return techFragment;
             case 1:
                 PodcastListFragment scienceFragment = new PodcastListFragment();
                 Bundle sciB = new Bundle();
-                sciB.putString(AppConstants.CATEGORY_KEY, AppConstants.SCIENCE_GENRE);
+                sciB.putString(AppConstants.INSTANCE.getCATEGORY_KEY(), AppConstants.INSTANCE.getSCIENCE_GENRE());
                 scienceFragment.setArguments(sciB);
                 return scienceFragment;
             case 2:
                 PodcastListFragment healthFragment = new PodcastListFragment();
                 Bundle healB = new Bundle();
-                healB.putString(AppConstants.CATEGORY_KEY, AppConstants.HEALTH_GENRE);
+                healB.putString(AppConstants.INSTANCE.getCATEGORY_KEY(), AppConstants.INSTANCE.getHEALTH_GENRE());
                 healthFragment.setArguments(healB);
                 return healthFragment;
             case 3:
                 PodcastListFragment businessFragment = new PodcastListFragment();
                 Bundle bussB = new Bundle();
-                bussB.putString(AppConstants.CATEGORY_KEY, AppConstants.BUSINESS_GENRE);
+                bussB.putString(AppConstants.INSTANCE.getCATEGORY_KEY(), AppConstants.INSTANCE.getBUSINESS_GENRE());
                 businessFragment.setArguments(bussB);
                 return businessFragment;
             case 4:
                 PodcastListFragment sportsFragment = new PodcastListFragment();
                 Bundle sportB = new Bundle();
-                sportB.putString(AppConstants.CATEGORY_KEY, AppConstants.SPORTS_GENRE);
+                sportB.putString(AppConstants.INSTANCE.getCATEGORY_KEY(), AppConstants.INSTANCE.getSPORTS_GENRE());
                 sportsFragment.setArguments(sportB);
                 return sportsFragment;
         }

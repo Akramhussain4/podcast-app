@@ -86,7 +86,7 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
                 } else {
                     List<Entry> filteredList = new ArrayList<>();
                     for (Entry row : mEntry) {
-                        if (row.getEntryTitle().labelTitle.toLowerCase().contains(charString.toLowerCase()) || row.getEntryTitle().labelTitle.contains(charSequence)) {
+                        if (row.getEntryTitle().getLabelTitle().toLowerCase().contains(charString.toLowerCase()) || row.getEntryTitle().getLabelTitle().contains(charSequence)) {
                             filteredList.add(row);
                         }
                     }

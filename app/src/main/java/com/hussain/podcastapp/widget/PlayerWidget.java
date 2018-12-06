@@ -40,8 +40,8 @@ public class PlayerWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.player_widget);
         Intent intent = new Intent(context, PlayerActivity.class);
         Bundle serviceBundle = new Bundle();
-        serviceBundle.putParcelable(AppConstants.ITEM_KEY, item);
-        intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
+        serviceBundle.putParcelable(AppConstants.INSTANCE.getITEM_KEY(), item);
+        intent.putExtra(AppConstants.INSTANCE.getBUNDLE_KEY(), serviceBundle);
         PendingIntent playerPendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget_root, playerPendingIntent);
         // Instruct the widget manager to update the widget
@@ -109,10 +109,10 @@ public class PlayerWidget extends AppWidgetProvider {
             if (intent.hasExtra(WIDGET_NO_PLAYING_EXTRA)) {
                 this.mTitle = null;
                 this.isPlaying = false;
-            } else if (intent.hasExtra(AppConstants.BUNDLE_KEY) && intent.hasExtra(WIDGET_PLAYING_EXTRA)) {
-                Bundle b = intent.getBundleExtra(AppConstants.BUNDLE_KEY);
+            } else if (intent.hasExtra(AppConstants.INSTANCE.getBUNDLE_KEY()) && intent.hasExtra(WIDGET_PLAYING_EXTRA)) {
+                Bundle b = intent.getBundleExtra(AppConstants.INSTANCE.getBUNDLE_KEY());
                 if (b != null) {
-                    item = b.getParcelable(AppConstants.ITEM_KEY);
+                    item = b.getParcelable(AppConstants.INSTANCE.getITEM_KEY());
                     this.mTitle = item.getTitle();
                     this.mThumbnail = item.getImage();
                 }
@@ -124,12 +124,12 @@ public class PlayerWidget extends AppWidgetProvider {
         }
         if (action.equals(PLAY_BUTTON_CLICKED_ACTION)) {
             Intent playEpisodeIntent = new Intent(context, AudioPlayerService.class);
-            playEpisodeIntent.setAction(AppConstants.ACTION_PLAY);
+            playEpisodeIntent.setAction(AppConstants.INSTANCE.getACTION_PLAY());
             context.startService(playEpisodeIntent);
         }
         if (action.equals(PAUSE_BUTTON_CLICKED_ACTION)) {
             Intent pauseEpisodeIntent = new Intent(context, AudioPlayerService.class);
-            pauseEpisodeIntent.setAction(AppConstants.ACTION_PAUSE);
+            pauseEpisodeIntent.setAction(AppConstants.INSTANCE.getACTION_PAUSE());
             context.startService(pauseEpisodeIntent);
         }
         super.onReceive(context, intent);

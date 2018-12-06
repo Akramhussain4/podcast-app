@@ -77,9 +77,9 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
         if (b != null) {
-            mCategory = b.getString(AppConstants.CATEGORY_KEY);
+            mCategory = b.getString(AppConstants.INSTANCE.getCATEGORY_KEY());
         }
-        mDb = AppDatabase.getInstance(getContext());
+        mDb = AppDatabase.Companion.getInstance(getContext());
         mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -184,7 +184,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
 
     private void checkIfSubscribed(Entry item, LookUpResponse.Results mResults) {
         String feedId = item.getFeedId().getAttributes().getId();
-        AppExecutors.getInstance().getDiskIO().execute(() -> {
+        AppExecutors.Companion.getInstance().getDiskIO().execute(() -> {
             Entry entry = mDb.entryDao().getPodcast(feedId);
             if (entry != null) {
                 mSubscribed = true;
@@ -196,10 +196,10 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
     }
 
     private void bottomDialog(Entry item, LookUpResponse.Results results, boolean sub) {
-        mBottomDialog = CustomBottomSheet.showBottomDialog(getActivity(), item, results.getArtWork(), view -> {
+        mBottomDialog = CustomBottomSheet.INSTANCE.showBottomDialog(getActivity(), item, results.getArtWork(), view -> {
             Intent intent = new Intent(getContext(), EpisodesActivity.class);
-            intent.putExtra(AppConstants.FEED_URL_KEY, mResults.getFeedUrl());
-            intent.putExtra(AppConstants.ARTWORK_URL, mResults.getArtWork());
+            intent.putExtra(AppConstants.INSTANCE.getFEED_URL_KEY(), mResults.getFeedUrl());
+            intent.putExtra(AppConstants.INSTANCE.getARTWORK_URL(), mResults.getArtWork());
             showBottomDialog(false);
             startActivity(intent);
         }, view -> {
@@ -218,7 +218,7 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         Button btSub = view.findViewById(R.id.btSubscribe);
         btSub.setText(R.string.subscribe);
         mSubscribed = false;
-        AppExecutors.getInstance().getDiskIO().execute(() ->
+        AppExecutors.Companion.getInstance().getDiskIO().execute(() ->
                 mDb.entryDao().deletePodcast(item.getFeedId().getAttributes().getId()));
         mDatabase.child(mUserId).child(item.getFeedId().getAttributes().getId()).removeValue();
     }
@@ -227,10 +227,10 @@ public class PodcastListFragment extends Fragment implements PodcastAdapter.Podc
         Button btSub = view.findViewById(R.id.btSubscribe);
         btSub.setText(R.string.unsubscribe);
         mSubscribed = true;
-        AppExecutors.getInstance().getDiskIO().execute(() ->
+        AppExecutors.Companion.getInstance().getDiskIO().execute(() ->
                 mDb.entryDao().insertPodcast(item));
         Map<String, Object> postValues = item.toMap();
-        mDatabase.child(mUserId).child(item.getFeedId().attributes.id).setValue(postValues);
+        mDatabase.child(mUserId).child(item.getFeedId().getAttributes().getId()).setValue(postValues);
     }
 
 

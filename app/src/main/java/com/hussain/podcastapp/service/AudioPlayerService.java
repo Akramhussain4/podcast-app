@@ -39,9 +39,6 @@ import com.hussain.podcastapp.widget.PlayerWidget;
 
 import androidx.annotation.Nullable;
 
-import static com.hussain.podcastapp.utils.AppConstants.ACTION_PAUSE;
-import static com.hussain.podcastapp.utils.AppConstants.ACTION_PLAY;
-
 public class AudioPlayerService extends Service implements Player.EventListener {
 
     private final IBinder mBinder = new LocalBinder();
@@ -84,21 +81,21 @@ public class AudioPlayerService extends Service implements Player.EventListener 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Bundle b = intent.getBundleExtra(AppConstants.BUNDLE_KEY);
+        Bundle b = intent.getBundleExtra(AppConstants.INSTANCE.getBUNDLE_KEY());
         if (b != null) {
             releasePlayer();
-            mItem = b.getParcelable(AppConstants.ITEM_KEY);
+            mItem = b.getParcelable(AppConstants.INSTANCE.getITEM_KEY());
         }
         if (mItem != null && mPlayer == null && !TextUtils.isEmpty(mItem.getUrl())) {
             startPlayer();
         }
         String action = intent.getAction();
         if (mPlayer != null) {
-            if (!TextUtils.isEmpty(action) && action.equalsIgnoreCase(ACTION_PLAY)) {
+            if (!TextUtils.isEmpty(action) && action.equalsIgnoreCase(INSTANCE.getACTION_PLAY())) {
                 mPlayer.setPlayWhenReady(true);
 
             }
-            if (!TextUtils.isEmpty(action) && action.equalsIgnoreCase(ACTION_PAUSE)) {
+            if (!TextUtils.isEmpty(action) && action.equalsIgnoreCase(INSTANCE.getACTION_PAUSE())) {
                 mPlayer.setPlayWhenReady(false);
             }
         }
@@ -112,7 +109,7 @@ public class AudioPlayerService extends Service implements Player.EventListener 
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
                 Util.getUserAgent(context, getString(R.string.app_name)));
         CacheDataSourceFactory cacheDataSourceFactory = new CacheDataSourceFactory(
-                CommonUtils.getCache(context),
+                CommonUtils.INSTANCE.getCache(context),
                 dataSourceFactory,
                 CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
         MediaSource mediaSource = new ExtractorMediaSource.Factory(cacheDataSourceFactory)
@@ -120,9 +117,9 @@ public class AudioPlayerService extends Service implements Player.EventListener 
         mPlayer.prepare(mediaSource);
         mPlayer.addListener(this);
         mPlayer.setPlayWhenReady(true);
-        mPlayerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(context, AppConstants.PLAYBACK_CHANNEL_ID,
+        mPlayerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(context, AppConstants.INSTANCE.getPLAYBACK_CHANNEL_ID(),
                 R.string.playback_channel_name,
-                AppConstants.PLAYBACK_NOTIFICATION_ID,
+                AppConstants.INSTANCE.getPLAYBACK_NOTIFICATION_ID(),
                 new PlayerNotificationManager.MediaDescriptionAdapter() {
                     @Override
                     public String getCurrentContentTitle(Player player) {
@@ -134,8 +131,8 @@ public class AudioPlayerService extends Service implements Player.EventListener 
                     public PendingIntent createCurrentContentIntent(Player player) {
                         Intent intent = new Intent(context, PlayerActivity.class);
                         Bundle serviceBundle = new Bundle();
-                        serviceBundle.putParcelable(AppConstants.ITEM_KEY, mItem);
-                        intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
+                        serviceBundle.putParcelable(AppConstants.INSTANCE.getITEM_KEY(), mItem);
+                        intent.putExtra(AppConstants.INSTANCE.getBUNDLE_KEY(), serviceBundle);
                         return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     }
 
@@ -181,8 +178,8 @@ public class AudioPlayerService extends Service implements Player.EventListener 
                 .getAppWidgetIds(new ComponentName(getApplication(), PlayerWidget.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         Bundle serviceBundle = new Bundle();
-        serviceBundle.putParcelable(AppConstants.ITEM_KEY, mItem);
-        intent.putExtra(AppConstants.BUNDLE_KEY, serviceBundle);
+        serviceBundle.putParcelable(AppConstants.INSTANCE.getITEM_KEY(), mItem);
+        intent.putExtra(AppConstants.INSTANCE.getBUNDLE_KEY(), serviceBundle);
         intent.putExtra(PlayerWidget.WIDGET_PLAYING_EXTRA, playWhenReady);
         sendBroadcast(intent);
     }
