@@ -38,6 +38,7 @@ class MainActivity : BaseActivity() {
     private fun setUI() {
         val adapter = PodcastPagerAdapter(supportFragmentManager)
         vp.adapter = adapter
+
         val types = ArrayList<String>()
         types.add("TECH")
         types.add("Science")
@@ -46,32 +47,40 @@ class MainActivity : BaseActivity() {
         types.add("Sports")
         adapter.refresh(types)
         tabLayout.setupWithViewPager(vp, true)
+
         DrawerImageLoader.init(object : AbstractDrawerImageLoader() {
             override fun set(imageView: ImageView?, uri: Uri?, placeholder: Drawable?) {
                 GlideApp.with(imageView!!.context).load(mFirebaseUser?.photoUrl).into(imageView)
             }
         })
         DrawerBuilder().withActivity(this).build()
+
         val headerResult = AccountHeaderBuilder()
                 .withActivity(this)
                 .withSelectionListEnabledForSingleProfile(false)
                 .withHeaderBackground(R.drawable.header_background)
-                .addProfiles(
-                        ProfileDrawerItem().withName(mFirebaseUser?.displayName).withEmail(mFirebaseUser?.email).withIcon(mFirebaseUser?.photoUrl)
-                )
-                .withOnAccountHeaderListener { view, profile, currentProfile -> false }
+                .addProfiles(ProfileDrawerItem()
+                        .withName(mFirebaseUser?.displayName)
+                        .withEmail(mFirebaseUser?.email)
+                        .withIcon(mFirebaseUser?.photoUrl))
+                .withOnAccountHeaderListener { _, _, _ -> false }
                 .build()
+
         DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(R.drawable.ic_home).withSelectable(true),
-                        PrimaryDrawerItem().withIdentifier(2).withName("Subscriptions").withIcon(R.drawable.ic_heart_box).withSelectable(false),
+                        PrimaryDrawerItem().withIdentifier(1)
+                                .withName("Home").withIcon(R.drawable.ic_home)
+                                .withSelectable(true),
+                        PrimaryDrawerItem().withIdentifier(2)
+                                .withName("Subscriptions").withIcon(R.drawable.ic_heart_box)
+                                .withSelectable(false),
                         DividerDrawerItem(),
-                        SecondaryDrawerItem().withIdentifier(3).withIcon(R.drawable.ic_info).withName("About").withSelectable(false)
-                )
-                .withOnDrawerItemClickListener { view, position, drawerItem ->
+                        SecondaryDrawerItem().withIdentifier(3).withIcon(R.drawable.ic_info)
+                                .withName("About").withSelectable(false))
+                .withOnDrawerItemClickListener { _, _, drawerItem ->
                     if (drawerItem != null) {
                         when (drawerItem.identifier.toInt()) {
                             2 -> startActivity(Intent(this, SubscribeActivity::class.java))
@@ -79,8 +88,7 @@ class MainActivity : BaseActivity() {
                         }
                     }
                     false
-                }
-                .build()
+                }.build()
     }
 
 

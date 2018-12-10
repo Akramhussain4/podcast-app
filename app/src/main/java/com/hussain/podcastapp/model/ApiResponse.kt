@@ -10,10 +10,5 @@ class ApiResponse {
         fun getEntry(): List<Entry>? {
             return entry
         }
-
-        fun setEntry(entry: List<Entry>) {
-            this.entry = entry
-        }
-
     }
 }

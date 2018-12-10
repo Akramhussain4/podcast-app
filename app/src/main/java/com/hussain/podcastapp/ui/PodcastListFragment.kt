@@ -55,10 +55,12 @@ class PodcastListFragment : Fragment(), PodcastAdapter.PodcastClickListener, IBa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val b = arguments
         if (b != null) {
             mCategory = b.getString(AppConstants.CATEGORY_KEY)
         }
+
         mDb = AppDatabase.getInstance(context)
         mDatabase = FirebaseDatabase.getInstance().reference
         val user = FirebaseAuth.getInstance().currentUser
@@ -167,7 +169,7 @@ class PodcastListFragment : Fragment(), PodcastAdapter.PodcastClickListener, IBa
     }
 
     private fun bottomDialog(item: Entry, results: LookUpResponse.Results, sub: Boolean) {
-        mBottomDialog = CustomBottomSheet.showBottomDialog(activity, item, results.artWork!!, { view ->
+        mBottomDialog = CustomBottomSheet.showBottomDialog(activity, item, results.artWork!!, { _ ->
             val intent = Intent(context, EpisodesActivity::class.java)
             intent.putExtra(AppConstants.FEED_URL_KEY, mResults?.feedUrl)
             intent.putExtra(AppConstants.ARTWORK_URL, mResults?.artWork)

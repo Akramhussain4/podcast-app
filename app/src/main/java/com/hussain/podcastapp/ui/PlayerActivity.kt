@@ -54,6 +54,7 @@ class PlayerActivity : BaseActivity() {
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         onCreate(savedInstanceState, R.layout.activity_player)
+
         mSavedState = savedInstanceState
         val b = intent.getBundleExtra(AppConstants.BUNDLE_KEY)
         if (b != null) {
@@ -61,6 +62,7 @@ class PlayerActivity : BaseActivity() {
             shareableLink = b.getString(AppConstants.SHARE_KEY)
             startPlayerService(item)
         }
+
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
     }
@@ -72,6 +74,7 @@ class PlayerActivity : BaseActivity() {
             mSummary = item.summary
             intent = Intent(this, AudioPlayerService::class.java)
             val serviceBundle = Bundle()
+
             serviceBundle.putParcelable(AppConstants.ITEM_KEY, item)
             intent!!.putExtra(AppConstants.BUNDLE_KEY, serviceBundle)
             stopService(intent)

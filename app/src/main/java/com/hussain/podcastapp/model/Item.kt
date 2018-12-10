@@ -32,7 +32,7 @@ class Item : Parcelable {
     @Attribute(name = "url")
     var url: String? = null
 
-    var bitmap: Bitmap? = null
+    private var bitmap: Bitmap? = null
 
     private constructor(parcel: Parcel) {
         title = parcel.readString()

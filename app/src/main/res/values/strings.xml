@@ -1,11 +1,5 @@
 <resources>
     <string name="app_name">Pod play</string>
-    <array name="titles">
-        <item>TECH</item>
-        <item>Science</item>
-        <item>Health</item>
-        <item>Comedy</item>
-    </array>
 
     <string name="playback_channel_name">Playback</string>
     <string name="podcast_thumbnail">podcast thumbnail</string>
@@ -41,5 +35,4 @@
     <string name="buy_me_a_coffee">Buy me a Coffee!</string>
     <string name="view">View</string>
     <string name="notification_content">Checkout latest podcast\'s for today</string>
-    <string name="no_network_message">Check your network connection!</string>
 </resources>

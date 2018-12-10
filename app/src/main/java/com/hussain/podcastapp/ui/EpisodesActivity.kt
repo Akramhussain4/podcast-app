@@ -41,7 +41,6 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 class EpisodesActivity : BaseActivity(), EpisodeAdapter.EpisodeClickListener {
 
     private var mInterstitialAd: InterstitialAd? = null
-
     private var mArtworkUrl: String? = null
     private var mItems: List<Item>? = null
     private var mChannel: Channel? = null
@@ -49,36 +48,19 @@ class EpisodesActivity : BaseActivity(), EpisodeAdapter.EpisodeClickListener {
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         onCreate(savedInstanceState, R.layout.activity_episodes)
+
         val b = intent
         val mFeedUrl = b.getStringExtra(AppConstants.FEED_URL_KEY)
         mArtworkUrl = b.getStringExtra(AppConstants.ARTWORK_URL)
+
         if (mFeedUrl != null) {
             getRssFeed(mFeedUrl)
-            rvEpisodes!!.layoutManager = LinearLayoutManager(this)
+            rvEpisodes?.layoutManager = LinearLayoutManager(this)
         }
-        mInterstitialAd = InterstitialAd(this)
-        mInterstitialAd!!.adUnitId = "ca-app-pub-4616631912723447/5671156240"
-        mInterstitialAd!!.loadAd(AdRequest.Builder().build())
-    }
 
-    private fun setUI() {
-        if (mChannel != null && mItems != null) {
-            val episodesText = mItems!!.size.toString() + " " + resources.getString(R.string.episodes_text)
-            tvTitle.text = mChannel!!.title
-            tvDescription.text = Html.fromHtml(mChannel?.description)
-            tvEpisodes.text = episodesText
-            GlideApp.with(this)
-                    .load(mArtworkUrl)
-                    .placeholder(R.color.colorPrimary)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(ivArtwork)
-            val adapter = EpisodeAdapter(mItems!!, this)
-            rvEpisodes!!.adapter = adapter
-            showAnimation(false)
-        }
-        if (mInterstitialAd!!.isLoaded) {
-            mInterstitialAd!!.show()
-        }
+        mInterstitialAd = InterstitialAd(this)
+        mInterstitialAd?.adUnitId = "ca-app-pub-4616631912723447/5671156240"
+        mInterstitialAd?.loadAd(AdRequest.Builder().build())
     }
 
     private fun getRssFeed(url: String) {
@@ -90,13 +72,16 @@ class EpisodesActivity : BaseActivity(), EpisodeAdapter.EpisodeClickListener {
         val path = uri.path
         val limit = uri.getQueryParameter("id")
         rssURL = "$protocol://$server$path/"
+
         val retrofit = Retrofit.Builder()
                 .baseUrl(rssURL)
                 .client(OkHttpClient())
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build()
+
         val apiInterface = retrofit.create(ApiInterface::class.java)
         val rssFeedCall = apiInterface.getRssFeed(limit!!)
+
         rssFeedCall.enqueue(object : Callback<RssFeed> {
             override fun onResponse(@NonNull call: Call<RssFeed>, @NonNull response: Response<RssFeed>) {
                 val data = response.body()
@@ -120,11 +105,31 @@ class EpisodesActivity : BaseActivity(), EpisodeAdapter.EpisodeClickListener {
         })
     }
 
+    private fun setUI() {
+        if (mChannel != null && mItems != null) {
+            val episodesText = mItems?.size.toString() + " " + resources.getString(R.string.episodes_text)
+            tvTitle.text = mChannel?.title
+            tvDescription.text = Html.fromHtml(mChannel?.description)
+            tvEpisodes.text = episodesText
+            GlideApp.with(this)
+                    .load(mArtworkUrl)
+                    .placeholder(R.color.colorPrimary)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ivArtwork)
+            val adapter = EpisodeAdapter(mItems!!, this)
+            rvEpisodes?.adapter = adapter
+            showAnimation(false)
+        }
+        if (mInterstitialAd!!.isLoaded) {
+            mInterstitialAd?.show()
+        }
+    }
+
     override fun onEpisodeClick(item: Item, position: Int, imageView: ImageView?) {
         val intent = Intent(this, PlayerActivity::class.java)
         val dataBundle = Bundle()
         dataBundle.putParcelable(AppConstants.ITEM_KEY, item)
-        dataBundle.putString(AppConstants.SHARE_KEY, mChannel!!.shareLink)
+        dataBundle.putString(AppConstants.SHARE_KEY, mChannel?.shareLink)
         intent.putExtra(AppConstants.BUNDLE_KEY, dataBundle)
         val transitionBundle = ActivityOptions.makeSceneTransitionAnimation(this, imageView, imageView!!.transitionName).toBundle()
         startActivity(intent, transitionBundle)
@@ -142,12 +147,12 @@ class EpisodesActivity : BaseActivity(), EpisodeAdapter.EpisodeClickListener {
     }
 
     public override fun onSaveInstanceState(@NonNull outState: Bundle) {
-        outState.putParcelable(AppConstants.SCROLL_POSITION, rvEpisodes!!.layoutManager?.onSaveInstanceState())
+        outState.putParcelable(AppConstants.SCROLL_POSITION, rvEpisodes?.layoutManager?.onSaveInstanceState())
         super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        rvEpisodes!!.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable<Parcelable>(AppConstants.SCROLL_POSITION))
+        rvEpisodes?.layoutManager?.onRestoreInstanceState(savedInstanceState.getParcelable<Parcelable>(AppConstants.SCROLL_POSITION))
         super.onRestoreInstanceState(savedInstanceState)
     }
 

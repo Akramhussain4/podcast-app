@@ -41,6 +41,7 @@ class SubscribeActivity : BaseActivity(), PodcastAdapter.PodcastClickListener {
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         onCreate(savedInstanceState, R.layout.activity_subscribe)
+
         mDb = AppDatabase.getInstance(this)
         val mUserId = FirebaseAuth.getInstance().currentUser?.uid
         mDatabase = FirebaseDatabase.getInstance().reference.child(mUserId!!)

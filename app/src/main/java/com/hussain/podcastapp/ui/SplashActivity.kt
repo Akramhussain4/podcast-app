@@ -19,14 +19,14 @@ import com.hussain.podcastapp.utils.SharedPrefUtil
 import java.util.*
 
 class SplashActivity : BaseActivity() {
-    private var Registered: Boolean? = null
+    private var mRegistered: Boolean? = null
 
     @SuppressLint("MissingSuperCall")
     override fun onCreate(savedInstanceState: Bundle?) {
         onCreate(savedInstanceState, R.layout.activity_splash)
-        Registered = SharedPrefUtil(this).getIsRegistered()
+        mRegistered = SharedPrefUtil(this).getIsRegistered()
         Handler(Looper.getMainLooper()).postDelayed({
-            if (Registered!!) {
+            if (mRegistered!!) {
                 launchMainActivity()
                 JobScheduler.getInstance()!!.scheduleJob("notification", this)
             } else {
@@ -39,14 +39,14 @@ class SplashActivity : BaseActivity() {
         val providers = Arrays.asList(
                 AuthUI.IdpConfig.GoogleBuilder().build(),
                 AuthUI.IdpConfig.EmailBuilder().build())
+
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
                         .setLogo(R.drawable.logo_transparent)
                         .setTheme(R.style.AppTheme)
-                        .build(),
-                RC_SIGN_IN)
+                        .build(), RC_SIGN_IN)
     }
 
     private fun launchMainActivity() {
@@ -62,14 +62,10 @@ class SplashActivity : BaseActivity() {
         if (requestCode == RC_SIGN_IN) {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
                 mFirebaseUser = FirebaseAuth.getInstance().currentUser
                 SharedPrefUtil(this).setIsRegistered(true)
                 launchMainActivity()
             } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
                 Toast.makeText(this, "Problem Signing In!!!", Toast.LENGTH_LONG).show()
             }
         }
@@ -81,6 +77,6 @@ class SplashActivity : BaseActivity() {
 
     companion object {
 
-        private val RC_SIGN_IN = 123
+        private const val RC_SIGN_IN = 123
     }
 }

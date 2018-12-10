@@ -32,8 +32,7 @@ class Entry : Parcelable {
 
     constructor()
 
-    @Ignore
-    protected constructor(parcel: Parcel) {
+    @Ignore private constructor(parcel: Parcel) {
         feedId = parcel.readValue(FeedID::class.java.classLoader) as FeedID
         entryTitle = parcel.readValue(Title::class.java.classLoader) as Title
         if (parcel.readByte().toInt() == 0x01) {
@@ -118,8 +117,7 @@ class Entry : Parcelable {
 
         constructor()
 
-        @Ignore
-        protected constructor(parcel: Parcel) {
+        @Ignore private constructor(parcel: Parcel) {
             label = parcel.readString()
         }
 
@@ -182,8 +180,7 @@ class Entry : Parcelable {
 
         constructor()
 
-        @Ignore
-        protected constructor(parcel: Parcel) {
+        @Ignore private constructor(parcel: Parcel) {
             id = parcel.readString()
         }
 
