@@ -12,7 +12,7 @@ import com.hussain.podcastapp.model.Entry
 
 object CustomBottomSheet {
 
-    fun showBottomDialog(activity: Activity?, item: Entry, artWork: String, viewClickListener: View.OnClickListener, subscribeClicklistener: View.OnClickListener, subscribed: Boolean): BottomSheetDialog? {
+    fun showBottomDialog(activity: Activity?, item: Entry, artWork: String, viewClickListener: (Any) -> Unit, subscribeClicklistener: (Any) -> Unit, subscribed: Boolean): BottomSheetDialog? {
 
         if (activity == null) {
             return null

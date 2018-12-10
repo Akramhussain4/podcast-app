@@ -19,10 +19,10 @@ abstract class AppDatabase : RoomDatabase() {
         private const val DATABASE_NAME = "podcasts"
         private var sInstance: AppDatabase? = null
 
-        fun getInstance(context: Context): AppDatabase? {
+        fun getInstance(context: Context?): AppDatabase? {
             if (sInstance == null) {
                 synchronized(LOCK) {
-                    sInstance = Room.databaseBuilder(context.applicationContext,
+                    sInstance = Room.databaseBuilder(context!!.applicationContext,
                             AppDatabase::class.java, AppDatabase.DATABASE_NAME)
                             .build()
                 }

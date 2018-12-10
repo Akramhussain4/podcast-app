@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hussain.podcastapp.model.PodcastImage
 
-object RoomTypeConverters {
+class RoomTypeConverters {
 
     @TypeConverter
     fun stringToSomeObjectList(data: String?): List<PodcastImage>? {

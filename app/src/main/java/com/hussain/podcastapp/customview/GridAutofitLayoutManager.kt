@@ -10,7 +10,7 @@ class GridAutofitLayoutManager : GridLayoutManager {
     private var mColumnWidth: Int = 0
     private var mColumnWidthChanged = true
 
-    constructor(context: Context, columnWidth: Int) : super(context, 1) {
+    constructor(context: Context?, columnWidth: Int) : super(context, 1) {
         setColumnWidth(checkedColumnWidth(context, columnWidth))
     }/* Initially set spanCount to 1, will be changed automatically later. */
 
@@ -18,14 +18,14 @@ class GridAutofitLayoutManager : GridLayoutManager {
         setColumnWidth(checkedColumnWidth(context, columnWidth))
     }/* Initially set spanCount to 1, will be changed automatically later. */
 
-    private fun checkedColumnWidth(context: Context, columnWidth: Int): Int {
+    private fun checkedColumnWidth(context: Context?, columnWidth: Int): Int {
         var columnWidth = columnWidth
         if (columnWidth <= 0) {
             /* Set default columnWidth value (48dp here). It is better to move this constant
             to static constant on top, but we need context to convert it to dp, so can't really
             do so. */
             columnWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48f,
-                    context.resources.displayMetrics).toInt()
+                    context?.resources?.displayMetrics).toInt()
         }
         return columnWidth
     }

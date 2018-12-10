@@ -5,25 +5,20 @@ import android.util.Log
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import butterknife.BindView
-import butterknife.ButterKnife
 import com.google.firebase.auth.FirebaseUser
 import com.hussain.podcastapp.R
 import com.hussain.podcastapp.customview.TransparentLoadAnimation
+import kotlinx.android.synthetic.main.layout_toolbar.*
 
 abstract class BaseActivity : AppCompatActivity(), IBaseView {
 
-
     private var loadAnimation: TransparentLoadAnimation? = null
-    @BindView(R.id.toolbar)
-    var mToolbar: Toolbar? = null
 
     var mFirebaseUser: FirebaseUser? = null
 
-    protected fun onCreate(savedInstanceState: Bundle, resourceLayout: Int) {
+    protected fun onCreate(savedInstanceState: Bundle?, resourceLayout: Int) {
         super.onCreate(savedInstanceState)
         setContentView(resourceLayout)
-        ButterKnife.bind(this)
         initProgress()
         setUpToolBar()
     }
@@ -33,14 +28,14 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView {
     }
 
     private fun setUpToolBar() {
-        setSupportActionBar(mToolbar)
+        setSupportActionBar(toolbar)
         if (supportActionBar != null) {
             val actionBar = supportActionBar
             actionBar!!.setDisplayHomeAsUpEnabled(true)
             actionBar.setDisplayShowTitleEnabled(false)
             actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
         }
-        supportActionBar?.let { onToolBarSetUp(mToolbar, it) }
+        supportActionBar?.let { onToolBarSetUp(toolbar, it) }
     }
 
     abstract fun onToolBarSetUp(toolbar: Toolbar?, actionBar: ActionBar)
