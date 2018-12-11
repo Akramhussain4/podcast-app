@@ -111,7 +111,7 @@ class PodcastListFragment : Fragment(), PodcastAdapter.PodcastClickListener, IBa
                 showAnimation(false)
                 if (mData != null) {
                     swiperefresh.isRefreshing = false
-                    mEntryData = mData.feed?.getEntry()
+                    mEntryData = mData.feed?.entry as List<Entry>?
                     mAdapter = PodcastAdapter(mEntryData!!, mContext)
                     recyclerView?.adapter = mAdapter
                 }
@@ -127,7 +127,7 @@ class PodcastListFragment : Fragment(), PodcastAdapter.PodcastClickListener, IBa
         if (isClicked) {
             isClicked = false
             showAnimation(true)
-            val id = item.feedId?.attributes?.id
+            val id = item.feedId.attributes.id
             lookUpCall(id, item)
         }
     }
@@ -156,9 +156,9 @@ class PodcastListFragment : Fragment(), PodcastAdapter.PodcastClickListener, IBa
     }
 
     private fun checkIfSubscribed(item: Entry, mResults: LookUpResponse.Results?) {
-        val feedId = item.feedId?.attributes?.id
+        val feedId = item.feedId.attributes.id
         AppExecutors.instance?.diskIO?.execute {
-            val entry = mDb?.entryDao()?.getPodcast(feedId!!)
+            val entry = mDb?.entryDao()?.getPodcast(feedId)
             if (entry != null) {
                 mSubscribed = true
                 mActivityContext?.runOnUiThread { bottomDialog(item, mResults!!, true) }
@@ -191,8 +191,8 @@ class PodcastListFragment : Fragment(), PodcastAdapter.PodcastClickListener, IBa
         val btSub = view.findViewById<Button>(R.id.btSubscribe)
         btSub.setText(R.string.subscribe)
         mSubscribed = false
-        AppExecutors.instance?.diskIO?.execute { mDb?.entryDao()?.deletePodcast(item.feedId?.attributes?.id!!) }
-        mDatabase?.child(mUserId!!)?.child(item.feedId?.attributes?.id!!)?.removeValue()
+        AppExecutors.instance?.diskIO?.execute { mDb?.entryDao()?.deletePodcast(item.feedId.attributes.id) }
+        mDatabase?.child(mUserId!!)?.child(item.feedId.attributes.id)?.removeValue()
     }
 
     private fun handleInsert(item: Entry, view: View) {
@@ -201,7 +201,7 @@ class PodcastListFragment : Fragment(), PodcastAdapter.PodcastClickListener, IBa
         mSubscribed = true
         AppExecutors.instance?.diskIO?.execute { mDb?.entryDao()?.insertPodcast(item) }
         val postValues = item.toMap()
-        mDatabase?.child(mUserId!!)?.child(item.feedId?.attributes?.id!!)?.setValue(postValues)
+        mDatabase?.child(mUserId!!)?.child(item.feedId.attributes.id)?.setValue(postValues)
     }
 
 

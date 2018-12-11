@@ -70,7 +70,7 @@ class EpisodesActivity : BaseActivity(), EpisodeAdapter.EpisodeClickListener {
         val protocol = uri.scheme
         val server = uri.authority
         val path = uri.path
-        val limit = uri.getQueryParameter("id")
+        val limit: String? = uri.getQueryParameter("id")
         rssURL = "$protocol://$server$path/"
 
         val retrofit = Retrofit.Builder()
@@ -87,7 +87,7 @@ class EpisodesActivity : BaseActivity(), EpisodeAdapter.EpisodeClickListener {
                 val data = response.body()
                 if (data != null) {
                     mChannel = data.channel
-                    mItems = mChannel!!.items
+                    mItems = mChannel?.items
                     setUI()
                 } else {
                     coordinatorLayout.visibility = View.GONE

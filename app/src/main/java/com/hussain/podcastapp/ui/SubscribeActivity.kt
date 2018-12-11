@@ -56,7 +56,7 @@ class SubscribeActivity : BaseActivity(), PodcastAdapter.PodcastClickListener {
     }
 
     private fun networkCall() {
-        mDatabase!!.addListenerForSingleValueEvent(object : ValueEventListener {
+        mDatabase?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(@NonNull dataSnapshot: DataSnapshot) {
                 for (postSnapshot in dataSnapshot.children) {
                     mFirebaseData!!.add(postSnapshot.getValue(Entry::class.java)!!)
@@ -72,8 +72,8 @@ class SubscribeActivity : BaseActivity(), PodcastAdapter.PodcastClickListener {
 
     private fun insertData() {
         showAnimation(false)
-        if (mFirebaseData != null && mFirebaseData!!.size > 0) {
-            AppExecutors.instance!!.diskIO.execute { mDb!!.entryDao().insertPodcastList(mFirebaseData!!) }
+        if (mFirebaseData != null && mFirebaseData?.size!! > 0) {
+            AppExecutors.instance?.diskIO?.execute { mDb?.entryDao()?.insertPodcastList(mFirebaseData!!) }
             setUI()
         } else {
             recyclerView.visibility = View.GONE
@@ -85,7 +85,7 @@ class SubscribeActivity : BaseActivity(), PodcastAdapter.PodcastClickListener {
     private fun setUI() {
         AppExecutors.instance?.diskIO?.execute {
             mEntryData = mDb?.entryDao()?.loadAllPodcasts()
-            if (mEntryData != null && mEntryData!!.isNotEmpty()) {
+            if (mEntryData != null && mEntryData?.isNotEmpty()!!) {
                 runOnUiThread {
                     val podcastAdapter = PodcastAdapter(mEntryData!!, this@SubscribeActivity)
                     recyclerView.adapter = podcastAdapter
@@ -107,7 +107,7 @@ class SubscribeActivity : BaseActivity(), PodcastAdapter.PodcastClickListener {
 
     override fun onPodcastClick(item: Entry, position: Int) {
         showAnimation(true)
-        val id = item.feedId?.attributes?.id
+        val id = item.feedId.attributes.id
         lookUpCall(id)
     }
 

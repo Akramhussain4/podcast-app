@@ -18,13 +18,13 @@ object AppConstants {
     val CATEGORY_KEY = "Category"
     val ENTRY_KEY = "EntryDataKey"
     val RESULTS_KEY = "ResultsDataKey"
-    val FEED_URL_KEY = "FeedUrlKey"
-    val ARTWORK_URL = "ArtworkUrl"
+    const val FEED_URL_KEY = "FeedUrlKey"
+    const val ARTWORK_URL = "ArtworkUrl"
 
-    val BUNDLE_KEY = "BundleKey"
-    val ITEM_KEY = "ItemKey"
-    val SCROLL_POSITION = "ScrollKey"
-    val SHARE_KEY = "shareLink"
+    const val BUNDLE_KEY = "BundleKey"
+    const val ITEM_KEY = "ItemKey"
+    const val SCROLL_POSITION = "ScrollKey"
+    const val SHARE_KEY = "shareLink"
 
     val PLAYBACK_CHANNEL_ID = "playback_channel"
     val PLAYBACK_NOTIFICATION_ID = 1
