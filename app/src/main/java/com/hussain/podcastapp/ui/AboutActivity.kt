@@ -47,4 +47,9 @@ class AboutActivity : BaseActivity() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.buymeacoffee.com/akramhussain4"))
         startActivity(intent)
     }
+
+    fun privacyClick(view: View) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.google.com/document/d/1X2n1ZYtsr3mvM4tFTlMnKAcXZCVGNCJFRFgiougUNDQ/edit?usp=sharing"))
+        startActivity(intent)
+    }
 }
