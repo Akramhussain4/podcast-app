@@ -54,6 +54,41 @@ class PodcastPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
                 sportsFragment.arguments = sportB
                 return sportsFragment
             }
+            5 -> {
+                val comedyFragment = PodcastListFragment()
+                val comedy = Bundle()
+                comedy.putString(AppConstants.CATEGORY_KEY, AppConstants.COMEDY_GENRE)
+                comedyFragment.arguments = comedy
+                return comedyFragment
+            }
+            6 -> {
+                val artsFragment = PodcastListFragment()
+                val arts = Bundle()
+                arts.putString(AppConstants.CATEGORY_KEY, AppConstants.ARTS_GENRE)
+                artsFragment.arguments = arts
+                return artsFragment
+            }
+            7 -> {
+                val eduFragment = PodcastListFragment()
+                val education = Bundle()
+                education.putString(AppConstants.CATEGORY_KEY, AppConstants.EDUCATION_GENRE)
+                eduFragment.arguments = education
+                return eduFragment
+            }
+            8 -> {
+                val gamesFragment = PodcastListFragment()
+                val games = Bundle()
+                games.putString(AppConstants.CATEGORY_KEY, AppConstants.GAMES_GENRE)
+                gamesFragment.arguments = games
+                return gamesFragment
+            }
+            9 -> {
+                val scoietyFragment = PodcastListFragment()
+                val society = Bundle()
+                society.putString(AppConstants.CATEGORY_KEY, AppConstants.SOCIETY_GENRE)
+                scoietyFragment.arguments = society
+                return scoietyFragment
+            }
         }
         return null
     }

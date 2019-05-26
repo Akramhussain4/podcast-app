@@ -45,6 +45,11 @@ class MainActivity : BaseActivity() {
         types.add("Health")
         types.add("Business")
         types.add("Sports")
+        types.add("Comedy")
+        types.add("Arts")
+        types.add("Education")
+        types.add("Games")
+        types.add("Society")
         adapter.refresh(types)
         tabLayout.setupWithViewPager(vp, true)
 
